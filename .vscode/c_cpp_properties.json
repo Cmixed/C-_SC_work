@@ -1,0 +1,15 @@
+{
+  "configurations": [
+    {
+      "compilerPath": "D:/Application-Software/mingw64_x86_64-13.1.0-release-win32-seh-ucrt-rt_v11-rev1/bin/gcc.exe",
+      "cppStandard": "${default}",
+      "includePath": [
+        "${workspaceFolder}/**"
+      ],
+      "intelliSenseMode": "windows-gcc-x64",
+      "name": "windows-gcc-x64",
+      "cStandard": "${default}"
+    }
+  ],
+  "version": 4
+}
