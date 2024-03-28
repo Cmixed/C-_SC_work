@@ -23,8 +23,6 @@ void DisplayNode(List *head);
 void DeleteMemory(List *head);
 List* MutiplyList(List *head1, List *head2, List *head3, int ALength, int BLength);
 void DeleteNode(List *head, int count);
-List* NextNode(List *pointer);
-List* NextNode(List *pointer, int count);
 List* ListMerge(List *head, int length);
 
 int main()
@@ -57,7 +55,7 @@ int main()
     // cout << "RAW:   " << endl;
     // DisplayNode(head3);
 
-    head3 = ListMerge(head3, ALength+BLength);
+    head3 = ListMerge(head3, ALength*BLength);
     cout << "M(x) = A(x) * B(x) :    " << endl;
     DisplayNode(head3);
 
@@ -93,8 +91,8 @@ List* ListMerge(List *head, int length) {
 // 先冒泡排序 正确无误
     List *p1 = head, *p2 = head->next;
     if (p2->next == NULL) { return head; }
-    for (int i=0; i<length+2; i++) {
-        for (int j=0; j<length-i+2; j++) {
+    for (int i=0; i<length-1; i++) {
+        for (int j=0; j<length-i-1; j++) {
             if (p1->_xn > p2->_xn) {
                 List temp(p1->_data, p1->_xn);
                 p1->_data = p2->_data;
@@ -109,30 +107,13 @@ List* ListMerge(List *head, int length) {
         p2 = head->next;
     }
     
-    // p1 = head; p2 = head->next;
-    // auto MergeNode = [&] (List *p1, List *p2 ) -> List* {
-    //     p1->_data = p1->_data+p2->_data;
-    //     p1->next = p2->next;
-    //     free(p2);
-    //     return p1;
-    // };
-
-    // p1 = head; p2 = head->next;
-    // for (int i = 0; i < length; i++) {
-    //     if (p1->_xn == p2->_xn) {
-    //         p1 = MergeNode(p1, p2);
-    //         p2 = p1->next;
-    //         ++i;
-    //     }
-    // }
-    
     p1 = head; p2 = head->next;
     
-    cout << "After Sort:   " << endl;
-    DisplayNode(head);
+    // cout << "After Sort:   " << endl;
+    // DisplayNode(head);
 
     List *temp = NULL;
-    for (int i = 0; i < length+1; i++) {
+    for (int i = 0; i < length-1; i++) {
         if (p1->_xn == p2->_xn) {
             temp = p2;
             p1->_data = p1->_data + p2->_data;
@@ -187,25 +168,6 @@ List* AddNode(List *head, List &temp) {
         pr->next = p;
     }
     return head;
-}
-
-
-List* NextNode(List *pointer) {
-    List *p = pointer;
-    if (p->next != NULL) {
-        p = p->next;
-    } else
-        cout << "NO NextNode!!!" << endl;
-    return p;
-}
-
-List* NextNode(List *pointer, int count) {
-    List *p  = pointer;
-    while (count) {
-        p = p->next;
-        --count;
-    }
-    return p;
 }
 
 void DisplayNode(List *head) {
