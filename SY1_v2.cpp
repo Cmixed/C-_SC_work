@@ -57,7 +57,7 @@ int main()
     // cout << "RAW:   " << endl;
     // DisplayNode(head3);
 
-    head3 = ListMerge(head3, ALength+BLength+1);
+    head3 = ListMerge(head3, ALength+BLength);
     cout << "M(x) = A(x) * B(x) :    " << endl;
     DisplayNode(head3);
 
@@ -93,8 +93,8 @@ List* ListMerge(List *head, int length) {
 // 先冒泡排序 正确无误
     List *p1 = head, *p2 = head->next;
     if (p2->next == NULL) { return head; }
-    for (int i=0; i<length-1; i++) {
-        for (int j=0; j<length-i+1; j++) {
+    for (int i=0; i<length+2; i++) {
+        for (int j=0; j<length-i+2; j++) {
             if (p1->_xn > p2->_xn) {
                 List temp(p1->_data, p1->_xn);
                 p1->_data = p2->_data;
@@ -128,9 +128,8 @@ List* ListMerge(List *head, int length) {
     
     p1 = head; p2 = head->next;
     
-    // cout << "After Sort:   " << endl;
-    // DisplayNode(head);
-
+    cout << "After Sort:   " << endl;
+    DisplayNode(head);
 
     List *temp = NULL;
     for (int i = 0; i < length+1; i++) {
