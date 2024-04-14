@@ -1,4 +1,5 @@
 #include<stdio.h>
+
 int fib(int k);
 int ans=0;
 int main()
@@ -12,11 +13,10 @@ int main()
 
 int fib(int k)
 {
+    ++ans;
     if(k == 1 || k == 2){
-	    ++ans;
 	    return 1;
 	} else {
-	    ++ans;
         return fib(k-1) + fib(k-2);
 	}
 }
