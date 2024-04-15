@@ -1,22 +1,22 @@
-#include<stdio.h>
+#include <stdio.h>
+ 
+int times = 0;
 
-int fib(int k);
-int ans=0;
-int main()
-{
+int fibonacci(int n) {
+
+    times++;
+    if (n <= 1)
+        return n;
+    else
+        return fibonacci(n - 1) + fibonacci(n - 2);
+}
+ 
+int main() {
     int n;
     scanf("%d", &n);
-    printf("%d,", fib(n));
-	printf("%d",ans);  
-    return 0;
-}
 
-int fib(int k)
-{
-    ++ans;
-    if(k == 1 || k == 2){
-	    return 1;
-	} else {
-        return fib(k-1) + fib(k-2);
-	}
+    printf("%d,", fibonacci(n));
+    printf("%d", times);
+
+    return 0;
 }
