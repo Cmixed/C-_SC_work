@@ -31,11 +31,26 @@ MONTH:// 月份值域 [1, 12]
     {
         cout << "输入你想查询的月份：";
         cin >> month;
-        if((month > 12 || month < 1) || (typeid(month) != typeid(int)) ) {
+        if((month > 12 || month < 1) ) {
+            
             throw "Error!!! 请输入正确的月份";
         }
     } catch(const char * s) {
         std::cerr << s << '\n';
+        if (cin.fail() && !cin.eof() )
+        {
+            cin.clear();
+            while ( cin.get() != '\n' )
+            {
+                continue;
+            }
+        }
+        else
+        {
+            cout << "I cannot go on!\n";
+            exit(1);
+        }
+        // cin.ignore(); cin.clear(); cin.sync(); // 防止数据类型不对引发的异常
         goto MONTH;
     }
     
@@ -44,18 +59,38 @@ OPTION:// 操作值域 [1, 5]
     {
         cout << "输入你想进行的操作：" ;
         cin >> option;
-        if((option > 5 || option < 1) || (typeid(option) != typeid(int)) ) {
+        if(cin.fail() ) {
+            // cin.clear();    cin.ignore();
+            throw -1;
+        } else if((option > 5 || option < 1) ) {
             throw "Error!!! 请输入正确的操作代号";
         }
     } catch(const char * s) {
-        cout << s << '\n';
+        std::cerr << s << '\n';
+        goto OPTION;
+    } catch(int & n) {
+
+        std::cerr << n << '\n';
+        cin.clear();    cin.ignore();
         goto OPTION;
     }
     
-
+// Switch 进行菜单选择
     switch (option)
     {
     case 1:
+        Function1();
+        break;
+    case 2:
+        Function1();
+        break;
+    case 3:
+        Function1();
+        break;
+    case 4:
+        Function1();
+        break;
+    case 5:
         Function1();
         break;
     
