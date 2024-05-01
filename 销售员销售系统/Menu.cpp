@@ -3,79 +3,94 @@
 
 #include <iostream>
 #include "Sales.cpp"
-#include "Menu.cpp"
 #include "FileIO.cpp"
 
 using namespace std;
 
-void Main_Menu(); // 主菜单
+static int month = 0;
+static int option = 0;
+
+
+void welcomeMenu(); // 欢迎菜单
+int menuMonth();    // 返回 month
+int menuOption();   // 返回 option
+int optionCase(int option); // 调用相应 option 操作
 
 int main(int argc, char const *argv[]) {
-    Main_Menu();
-
+    welcomeMenu();
+    month = menuMonth();
+    option = menuOption();
+    optionCase(option);
     return 0;
 }
 
-
-// 主菜单
-void Main_Menu()
+// 欢迎菜单
+void welcomeMenu()
 {
-    static int month = 0; // 操作的月份全局变量
-    int option = 0; // 操作的标记变量
+    std::cout << "******销售员销售系统******" << endl;
+}
 
-    cout << "******销售员销售系统******" << endl;
-
-
-MONTH:// 月份值域 [1, 12]
+// 返回 month 的值
+int menuMonth()
+{
+    MONTH:// 月份值域 [1, 12]
     try
     {
         cout << "输入你想查询的月份：";
         cin >> month;
-        if((month > 12 || month < 1) ) {
-            
+        if (cin.fail() )
+        {
+            throw -1; // 意外，非 int 类型 抛出 -1
+        } else if((month > 12 || month < 1) ) 
+        {
             throw "Error!!! 请输入正确的月份";
         }
-    } catch(const char * s) {
-        std::cerr << s << '\n';
-        if (cin.fail() && !cin.eof() )
-        {
-            cin.clear();
-            while ( cin.get() != '\n' )
-            {
-                continue;
-            }
-        }
-        else
-        {
-            cout << "I cannot go on!\n";
-            exit(1);
-        }
-        // cin.ignore(); cin.clear(); cin.sync(); // 防止数据类型不对引发的异常
+    } catch (const char * s) 
+    {
+        std::cout << s << '\n';
+        goto MONTH;
+    } catch (int s) 
+    {
+        std::cout << "Error!!! 请输入一个整数\n";
+        cin.clear(); cin.ignore(); // 用于设置 cin 对象状态 并 清除缓冲区
         goto MONTH;
     }
-    
-OPTION:// 操作值域 [1, 5]
+
+    return month;
+}
+
+// 返回 option 的值
+int menuOption()
+{
+    OPTION:// 操作值域 [1, 5]
     try
     {
         cout << "输入你想进行的操作：" ;
         cin >> option;
-        if(cin.fail() ) {
-            // cin.clear();    cin.ignore();
-            throw -1;
-        } else if((option > 5 || option < 1) ) {
-            throw "Error!!! 请输入正确的操作代号";
+        if(cin.fail() ) 
+        {
+            throw -1; // 意外，非 int 类型 抛出 -1
+        } else if((option > 5 || option < 1) ) 
+        {
+            throw "Error!!! 请输入正确的操作选项代号";
         }
-    } catch(const char * s) {
-        std::cerr << s << '\n';
+    } catch (const char * s) 
+    {
+        std::cout << s << '\n';
         goto OPTION;
-    } catch(int & n) {
-
-        std::cerr << n << '\n';
-        cin.clear();    cin.ignore();
+    } catch (int & n) 
+    {
+        std::cout << "Error!!! 请输入一个整数\n";
+        cin.clear();    cin.ignore();  // 用于设置 cin 对象状态 并 清除缓冲区
         goto OPTION;
     }
-    
-// Switch 进行菜单选择
+
+    return option;
+}
+
+// 调用相应 option 操作
+int optionCase(int option)
+{
     switch (option)
     {
     case 1:
@@ -93,15 +108,21 @@ OPTION:// 操作值域 [1, 5]
     case 5:
         Function1();
         break;
-    
     default:
-        cout << "NO OPtion!!!" << endl;
+        cout << "NO Related Option!!!" << endl;
         break;
     }
-    
-    cout << "输入记录：//销售员的代号+每种产品的代号和销量" << endl;
-    cout << "例如： A::1:1 2:2 3:3 4:4 5:5" << endl;
+
+    return option;
 }
+
+
+
+
+    
+    // cout << "输入记录：//销售员的代号+每种产品的代号和销量" << endl;
+    // cout << "例如： A::1:1 2:2 3:3 4:4 5:5" << endl;
+
 
 #endif // !MENU_CPP
  
