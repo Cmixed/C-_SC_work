@@ -10,25 +10,28 @@ using namespace std;
 static int month = 0;
 static int option = 0;
 
-
 void welcomeMenu(); // 欢迎菜单
+void byeMenu();     // 退出菜单
+void listOption();  // 列出所有的操作
+
 int menuMonth();    // 返回 month
 int menuOption();   // 返回 option
 int optionCase(int option); // 调用相应 option 操作
+
 
 int main(int argc, char const *argv[]) {
     welcomeMenu();
     month = menuMonth();
     option = menuOption();
-    optionCase(option);
+    while (option)
+    {
+        optionCase(option);
+        option = menuOption();
+    }
+    byeMenu();
     return 0;
 }
 
-// 欢迎菜单
-void welcomeMenu()
-{
-    std::cout << "******销售员销售系统******" << endl;
-}
 
 // 返回 month 的值
 int menuMonth()
@@ -65,8 +68,11 @@ int menuOption()
     OPTION:// 操作值域 [1, 5]
     try
     {
-        cout << "输入你想进行的操作：" ;
+        cout << "输入你想进行的操作：\n" ;
         cin >> option;
+        listOption();
+        if (option == 0) {  return option; }    // 退出
+        
         if(cin.fail() ) 
         {
             throw -1; // 意外，非 int 类型 抛出 -1
@@ -117,7 +123,28 @@ int optionCase(int option)
 }
 
 
+// 欢迎菜单
+void welcomeMenu()
+{
+    std::cout << "******销售员销售系统******" << endl;
+}
 
+// 退出菜单
+void byeMenu()
+{
+    cout << "系统退出";
+}     
+
+// 列出选项
+void listOption()
+{
+    cout << "1:F1" << endl;
+    cout << "1:F1" << endl;
+    cout << "1:F1" << endl;
+    cout << "1:F1" << endl;
+    cout << "1:F1" << endl;
+    cout << "1:F1" << endl;
+}
 
     
     // cout << "输入记录：//销售员的代号+每种产品的代号和销量" << endl;
