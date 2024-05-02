@@ -30,6 +30,7 @@ int main(int argc, char const *argv[]) {
         optionCase(option);
         option = menuOption();
     }
+    byeMenu();
     return 0;
 }
 
@@ -55,7 +56,7 @@ MONTH:// 月份值域 [1, 12]
     } catch (int s) 
     {
         std::cout << "Error!!! 请输入一个整数\n";
-        cin.clear(); cin.ignore(); // 用于设置 cin 对象状态 并 清除缓冲区
+        cin.clear(); cin.ignore(1024, '\n'); // 用于设置 cin 对象状态 并 清除缓冲区
         goto MONTH;
     }
 
@@ -86,7 +87,7 @@ OPTION:// 操作值域 [0, 5]
     } catch (int & n) 
     {
         std::cout << "Error!!! 请输入一个整数\n";
-        cin.clear();    cin.ignore();  // 用于设置 cin 对象状态 并 清除缓冲区
+        cin.clear();    cin.ignore(1024, '\n');  // 用于设置 cin 对象状态 并 清除缓冲区
         goto OPTION;
     }
 
@@ -98,8 +99,9 @@ int optionCase(int option)
 {
     switch (option)
     {
-    case 0:
+    case 0:         // 没有实际作用
         byeMenu();
+        break;
     case 1:
         caculatePrePeopleSales();
         break;
@@ -149,7 +151,7 @@ void listOption()
     cout.width(40);
     cout << "4)输出统计报表              5)输出上一个操作\n";
 
-    cout.fill(' ');
+    cout.fill(' ');	cout << endl;
     cout.setf(old, ios::adjustfield); // 恢复格式
 
 }
