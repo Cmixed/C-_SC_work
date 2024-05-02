@@ -12,9 +12,8 @@ static int option = 0;
 static int lastOption = 0;
 
 extern Sales sales[SALES_NUMBER];
-extern int arr[31][SALES_NUMBER][GOODS_NUMBER];     // FileIO.cpp
 
-void welcomeMenu(); // 欢迎菜单
+void welcomeMenu(Sales sales[]); // 欢迎菜单
 void byeMenu();     // 退出菜单
 void listOption();  // 列出所有的操作
 
@@ -22,12 +21,13 @@ int menuMonth();    // 返回 month
 int menuOption();   // 返回 option
 int optionCase(int option); // 调用相应 option 操作
 
-
 int main(int argc, char const *argv[]) {
-    welcomeMenu();
+
+    welcomeMenu(sales);
     month = menuMonth();
 
-    if (!fileRead(arr))   { byeMenu(); goto QUIT;}
+    // if (!fileRead(arr, month))   { byeMenu(); goto QUIT;}
+    if (!fileRead(sales, month))   { byeMenu(); goto QUIT;}
 
     option = menuOption();
     while (option)
@@ -136,7 +136,7 @@ int optionCase(int option)
 }
 
 // 欢迎菜单
-void welcomeMenu()
+void welcomeMenu(Sales sales[])
 {
     std::cout << "******销售员销售系统******" << endl;
 }
