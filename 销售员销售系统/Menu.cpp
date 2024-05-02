@@ -9,6 +9,7 @@ using namespace std;
 
 static int month = 0;
 static int option = 0;
+static int lastOption = 0;
 
 void welcomeMenu(); // 欢迎菜单
 void byeMenu();     // 退出菜单
@@ -25,18 +26,17 @@ int main(int argc, char const *argv[]) {
     option = menuOption();
     while (option)
     {
+        lastOption = option;
         optionCase(option);
         option = menuOption();
     }
-    byeMenu();
     return 0;
 }
-
 
 // 返回 month 的值
 int menuMonth()
 {
-    MONTH:// 月份值域 [1, 12]
+MONTH:// 月份值域 [1, 12]
     try
     {
         cout << "输入你想查询的月份：";
@@ -65,18 +65,17 @@ int menuMonth()
 // 返回 option 的值
 int menuOption()
 {
-    OPTION:// 操作值域 [1, 5]
+    listOption();
+OPTION:// 操作值域 [0, 5]
     try
     {
-        cout << "输入你想进行的操作：\n" ;
+        cout << "输入你想进行的操作：" ;
         cin >> option;
-        listOption();
-        if (option == 0) {  return option; }    // 退出
         
         if(cin.fail() ) 
         {
             throw -1; // 意外，非 int 类型 抛出 -1
-        } else if((option > 5 || option < 1) ) 
+        } else if((option > 5 || option < 0) ) 
         {
             throw "Error!!! 请输入正确的操作选项代号";
         }
@@ -99,20 +98,22 @@ int optionCase(int option)
 {
     switch (option)
     {
+    case 0:
+        byeMenu();
     case 1:
-        Function1();
+        caculatePrePeopleSales();
         break;
     case 2:
-        Function1();
+        sortSales();
         break;
     case 3:
-        Function1();
+        sortAll();
         break;
     case 4:
-        Function1();
+        outLable();
         break;
     case 5:
-        Function1();
+        funcLastOption(lastOption);
         break;
     default:
         cout << "NO Related Option!!!" << endl;
@@ -121,7 +122,6 @@ int optionCase(int option)
 
     return option;
 }
-
 
 // 欢迎菜单
 void welcomeMenu()
@@ -138,12 +138,20 @@ void byeMenu()
 // 列出选项
 void listOption()
 {
-    cout << "1:F1" << endl;
-    cout << "1:F1" << endl;
-    cout << "1:F1" << endl;
-    cout << "1:F1" << endl;
-    cout << "1:F1" << endl;
-    cout << "1:F1" << endl;
+    ios_base::fmtflags old = cout.setf(ios::left, ios::adjustfield);    // 调整为左对齐
+
+    cout.fill('_'); cout << endl;
+
+    cout.width(40);
+    cout << "0)退出系统                  1)计算某个月每个人每种产品的销售量\n";
+    cout.width(40);
+    cout << "2)按销售量对销售员进行排序  3)统计每种产品的总销售量（高到低）\n";
+    cout.width(40);
+    cout << "4)输出统计报表              5)输出上一个操作\n";
+
+    cout.fill(' ');
+    cout.setf(old, ios::adjustfield); // 恢复格式
+
 }
 
     
