@@ -2,6 +2,7 @@
 #define MENU_CPP
 
 #include <iostream>
+#include <cstdio>
 #include "Sales.cpp"
 #include "FileIO.cpp"
 
@@ -21,12 +22,15 @@ int menuMonth();    // 返回 month
 int menuOption();   // 返回 option
 int optionCase(int option); // 调用相应 option 操作
 
+void terminalClear(); // 清空控制台
+
 int main(int argc, char const *argv[]) {
 
     welcomeMenu(sales);
     month = menuMonth();
 
     // if (!fileRead(arr, month))   { byeMenu(); goto QUIT;}
+    
     if (!fileRead(sales, month))   { byeMenu(); goto QUIT;}
 
     option = menuOption();
@@ -144,6 +148,7 @@ void welcomeMenu(Sales sales[])
 // 退出菜单
 void byeMenu()
 {
+    terminalClear();
     cout << "系统退出";
 }     
 
@@ -152,8 +157,6 @@ void listOption()
 {
     ios_base::fmtflags old = cout.setf(ios::left, ios::adjustfield);    // 调整为左对齐
 
-    cout.fill('_'); cout << endl;
-
     cout.width(40);
     cout << "0)退出系统                  1)计算某个月每个人每种产品的销售量\n";
     cout.width(40);
@@ -161,14 +164,15 @@ void listOption()
     cout.width(40);
     cout << "4)输出统计报表              5)输出上一个操作\n";
 
-    cout.fill(' ');	cout << endl;
     cout.setf(old, ios::adjustfield); // 恢复格式
 
 }
 
-    
-    // cout << "输入记录：//销售员的代号+每种产品的代号和销量" << endl;
-    // cout << "例如： A::1:1 2:2 3:3 4:4 5:5" << endl;
+void terminalClear()
+{
+    system("cls");
+    // cout << "\033[2J\033[H";
+}
 
 
 #endif // !MENU_CPP
