@@ -15,8 +15,9 @@ static int lastOption = 0;
 extern Sales sales[SALES_NUMBER];
 
 void initSales(Sales sales[]);   // 初始化
-void welcomeMenu(Sales sales[]); // 欢迎菜单
+void welcomeMenu(); // 欢迎菜单
 void byeMenu();     // 退出菜单
+void waitMenu();    // 等待菜单
 void listOption();  // 列出所有的操作
 
 int menuMonth();    // 返回 month
@@ -28,19 +29,24 @@ void terminalClear(); // 清空控制台
 int main(int argc, char const *argv[]) {
 
     initSales(sales);
-    welcomeMenu(sales);
+    welcomeMenu();
+STARTMONTH:
     month = menuMonth();
 
     // if (!fileRead(arr, month))   { byeMenu(); goto QUIT;}
 
     if (!fileRead(sales, month))   { byeMenu(); goto QUIT;}
 
-    option = menuOption();
+    option = menuOption();      // 初始 option
+    
     while (option)
     {
-        lastOption = option;
-        optionCase(option);
-        option = menuOption();
+        optionCase(option);     // 调用相应 option 操作
+        lastOption = option;    // 初始化 lastoption
+        fileWrite(lastOption);
+        waitMenu();             // 等待
+        option = menuOption();  // 更新 option
+
     }
     byeMenu();
 
@@ -150,23 +156,47 @@ void initSales(Sales sales[])
 }
 
 // 欢迎菜单
-void welcomeMenu(Sales sales[])
+void welcomeMenu()
 {
-    std::cout << "******销售员销售系统******" << endl;
+    static int flag = 0;
+    std::cout << "Application:销售员销售系统\n" << endl;
+    if (flag)
+    {
+        cout << "!当前查询月份：" << month << endl;
+    }
+
+    flag = 1;
+    
+}
+
+void terminalClear()
+{
+    system("cls");
+    welcomeMenu();
+    // cout << "\033[2J\033[H";
+}
+
+void waitMenu()
+{
+    cout << endl;
+    cout << "按回车键以进行下一项操作";
+    cin.get(); cin.get();
 }
 
 // 退出菜单
 void byeMenu()
 {
     terminalClear();
-    cout << "系统退出";
+    cout << "\n系统退出";
 }     
 
 // 列出选项
 void listOption()
 {
-    ios_base::fmtflags old = cout.setf(ios::left, ios::adjustfield);    // 调整为左对齐
+    terminalClear();
 
+    ios_base::fmtflags old = cout.setf(ios::left, ios::adjustfield);    // 调整为左对齐
+    cout << endl;
     cout.width(40);
     cout << "0)退出系统                  1)计算某个月每个人每种产品的销售量\n";
     cout.width(40);
@@ -175,14 +205,10 @@ void listOption()
     cout << "4)输出统计报表              5)输出上一个操作\n";
 
     cout.setf(old, ios::adjustfield); // 恢复格式
-
+    cout << endl;
 }
 
-void terminalClear()
-{
-    system("cls");
-    // cout << "\033[2J\033[H";
-}
+
 
 
 #endif // !MENU_CPP

@@ -1,5 +1,5 @@
+// 销售员销售系统 配套 销售数据生成工具
 // 随机生成销售员的销售数据
-
 
 #include <iostream>
 #include <fstream>
@@ -10,8 +10,8 @@ using namespace std;
 int main()
 {
 	int month = 0; int times = 0;
-
-	cout << "输入月份 与 需要的记录条数:\n";
+	cout << "销售员销售系统 配套 销售数据生成工具：\n\n";
+	cout << "输入月份 与 需要的记录条数:\n\n";
 	cin >> month >> times;
 
 	ofstream fout("random.txt", ios_base::out | ios_base::trunc);
@@ -27,5 +27,9 @@ int main()
 			<< " 5 " << rand()%10+1 << '\n';
 	}
 	fout.close();
+	
+	cout << endl;
+	cout << "生成成功，请查看目录下 random.txt";
+
 	return 0;
 }

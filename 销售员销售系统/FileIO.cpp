@@ -4,22 +4,24 @@
 // cout << "例如：  7A  1 1 2 2 3 3 4 4 5 5
 
 // 读入 ”data.txt“ 文件
+// 存入 “oprion.txt” 文件
 
 #include <iostream>
 #include <fstream>
-#include <cstdio>
+#include <chrono>
+#include <iomanip>
 #include "Sales.cpp"
-
-using namespace std;
-
-const int SALES_NUMBER = 5;
 
 Sales sales[SALES_NUMBER];
 
 int fileRead(Sales sales[], int month);
+int fileWrite(int option);
+
 
 int fileRead(Sales sales[], int month)
 {
+    using namespace std;
+
     cout << endl;
     cout << "正在读取文件。\n";
 	
@@ -47,20 +49,59 @@ int fileRead(Sales sales[], int month)
         sales[order].caculateSales(as, bs, cs, ds, es);
     }
     
-
-
+    // 更新 sum_成员, 即所有的货物销售量总和
     for (int i = 0; i < SALES_NUMBER; i++)
     {
-        cout << "测试输出：\n";
-        sales[i].display();
-        cout << "测试输出结束：\n";
+        sales[i].sum();
     }
+    
+
+// 测试用，输出每个人的每个销售量
+    // for (int i = 0; i < SALES_NUMBER; i++)
+    // {
+    //     cout << "测试输出：\n";
+    //     sales[i].display();
+    //     cout << "测试输出结束：\n";
+    //     cin.get();
+    // }
     
     fin.close();
     cout << "读取文件成功！\n";
     
     return true;
 }
+
+int fileWrite(int option)
+{
+    using namespace std;
+    static int lineNumber = 1;
+
+    ofstream fout("option.txt", ios_base::out | ios_base::app);
+
+    // 获取当前时间点
+    auto now = std::chrono::system_clock::now();
+    // 将时间点转换为time_t以便进一步转换为本地时间
+    std::time_t now_time = std::chrono::system_clock::to_time_t(now);
+    // 将time_t转换为tm结构以便打印
+    std::tm* now_tm = std::localtime(&now_time);
+
+    if (lineNumber == 1)    // 本次运行的第一次
+    {
+        fout << endl;
+        fout << std::put_time(now_tm, "%Y-%m-%d %H:%M:%S") << endl;
+    }
+
+    // 打印格式化的时间
+    fout.width(3);
+    fout << lineNumber << " : " ;
+    fout << std::put_time(now_tm, "%Y-%m-%d %H:%M:%S") << ' '  << option << '\n';
+
+    ++lineNumber;
+
+    fout.close();
+    return true;
+}
+
 
 /* 旧的实现
 int fileRead(int arr[31][SALES_NUMBER][GOODS_NUMBER], int month)
