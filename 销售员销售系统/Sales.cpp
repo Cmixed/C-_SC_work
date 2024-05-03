@@ -197,6 +197,7 @@ int outLable(Sales sales[])
 {
     using namespace std;
 
+    std::cout << endl;
     std::cout << "统计报表：\n\n";
 
     // 来自 sortSales() 计算出每个销售员的销售量

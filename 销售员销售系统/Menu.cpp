@@ -38,15 +38,24 @@ STARTMONTH:
     if (!fileRead(sales, month))   { byeMenu(); goto QUIT;}
 
     option = menuOption();      // 初始 option
-    
+
+    if (option == 6)    // 切换月份
+    {
+        goto STARTMONTH;
+    }
+
     while (option)
     {
         optionCase(option);     // 调用相应 option 操作
         lastOption = option;    // 初始化 lastoption
-        fileWrite(lastOption);
+        fileWrite(lastOption, month);
         waitMenu();             // 等待
         option = menuOption();  // 更新 option
 
+        if (option == 6)    // 切换月份
+        {
+            goto STARTMONTH;
+        }
     }
     byeMenu();
 
@@ -61,6 +70,7 @@ int menuMonth()
 MONTH:// 月份值域 [1, 12]
     try
     {
+        cout << endl;
         cout << "输入你想查询的月份：";
         cin >> month;
         if (cin.fail() )
@@ -89,15 +99,16 @@ int menuOption()
 {
     listOption();
 
-OPTION:// 操作值域 [0, 5]
+OPTION:// 操作代码值域 [0, 6]
     try
     {
+        cout << endl;
         cout << "输入你想进行的操作：" ;
         cin >> option;
         if(cin.fail() ) 
         {
             throw -1; // 意外，非 int 类型 抛出 -1
-        } else if((option > 5 || option < 0) ) 
+        } else if((option > 6 || option < 0) ) 
         {
             throw "Error!!! 请输入正确的操作选项代号";
         }
@@ -137,6 +148,10 @@ int optionCase(int option)
         break;
     case 5:
         funcLastOption(lastOption);
+        break;
+    case 6:
+        cout << "Impossible!!!";
+        // 切换操作月份，goto 在 main 中实现
         break;
     default:
         cout << "NO Related Option!!!" << endl;
@@ -204,6 +219,8 @@ void listOption()
     cout << "2)按销售量对销售员进行排序  3)统计每种产品的总销售量（高到低）\n";
     cout.width(40);
     cout << "4)输出统计报表              5)输出上一个操作\n";
+    cout.width(40);
+    cout << "6)更改操作月份\n";
     cout << endl;
 
     cout.setf(old, ios::adjustfield); // 恢复格式

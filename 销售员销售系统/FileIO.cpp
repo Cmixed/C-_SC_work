@@ -15,7 +15,7 @@
 Sales sales[SALES_NUMBER];
 
 int fileRead(Sales sales[], int month);
-int fileWrite(int option);
+int fileWrite(int option, int month);
 
 
 int fileRead(Sales sales[], int month)
@@ -71,7 +71,7 @@ int fileRead(Sales sales[], int month)
     return true;
 }
 
-int fileWrite(int option)
+int fileWrite(int option, int month)
 {
     using namespace std;
     static int lineNumber = 1;
@@ -92,12 +92,14 @@ int fileWrite(int option)
     }
 
     // 打印格式化的时间
-    fout.width(3);
-    fout << lineNumber << " : " ;
-    fout << std::put_time(now_tm, "%Y-%m-%d %H:%M:%S") << ' '  << option << '\n';
+    ios_base::fmtflags old = fout.setf(ios::left, ios::adjustfield);
+
+    fout << setw(4) << lineNumber << " : " ;
+    fout << std::put_time(now_tm, "%Y-%m-%d %H:%M:%S") << ' '   << "  月份：" << setw(4) << month <<  "  操作代号：" << option << '\n';
 
     ++lineNumber;
 
+    fout.setf(old, ios::adjustfield);
     fout.close();
     return true;
 }
