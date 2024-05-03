@@ -14,6 +14,7 @@ static int lastOption = 0;
 
 extern Sales sales[SALES_NUMBER];
 
+void initSales(Sales sales[]);   // 初始化
 void welcomeMenu(Sales sales[]); // 欢迎菜单
 void byeMenu();     // 退出菜单
 void listOption();  // 列出所有的操作
@@ -26,11 +27,12 @@ void terminalClear(); // 清空控制台
 
 int main(int argc, char const *argv[]) {
 
+    initSales(sales);
     welcomeMenu(sales);
     month = menuMonth();
 
     // if (!fileRead(arr, month))   { byeMenu(); goto QUIT;}
-    
+
     if (!fileRead(sales, month))   { byeMenu(); goto QUIT;}
 
     option = menuOption();
@@ -66,7 +68,7 @@ MONTH:// 月份值域 [1, 12]
     {
         std::cout << s << '\n';
         goto MONTH;
-    } catch (int s) 
+    } catch (int n) 
     {
         std::cout << "Error!!! 请输入一个整数\n";
         cin.clear(); cin.ignore(1024, '\n'); // 用于设置 cin 对象状态 并 清除缓冲区
@@ -86,7 +88,6 @@ OPTION:// 操作值域 [0, 5]
     {
         cout << "输入你想进行的操作：" ;
         cin >> option;
-        
         if(cin.fail() ) 
         {
             throw -1; // 意外，非 int 类型 抛出 -1
@@ -98,7 +99,7 @@ OPTION:// 操作值域 [0, 5]
     {
         std::cout << s << '\n';
         goto OPTION;
-    } catch (int & n) 
+    } catch (int n) 
     {
         std::cout << "Error!!! 请输入一个整数\n";
         cin.clear();    cin.ignore(1024, '\n');  // 用于设置 cin 对象状态 并 清除缓冲区
@@ -117,16 +118,16 @@ int optionCase(int option)
         byeMenu();
         break;
     case 1:
-        caculatePrePeopleSales();
+        caculatePrePeopleSales(sales);
         break;
     case 2:
-        sortSales();
+        sortSales(sales);
         break;
     case 3:
-        sortAll();
+        sortAll(sales);
         break;
     case 4:
-        outLable();
+        outLable(sales);
         break;
     case 5:
         funcLastOption(lastOption);
@@ -137,6 +138,15 @@ int optionCase(int option)
     }
 
     return option;
+}
+
+//初始化
+void initSales(Sales sales[])
+{
+    for (int i = 0; i < SALES_NUMBER; i++)
+    {
+        sales[i] = Sales(i, 0, 0, 0, 0, 0);
+    }
 }
 
 // 欢迎菜单

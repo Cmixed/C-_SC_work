@@ -43,12 +43,11 @@ int fileRead(Sales sales[], int month)
         }
         
         int order = (int)(SalseOrder - 'A'); // 找到相应的销售员序号
-        sales[i] = Sales(as, bs, cs, ds, es);
+        // sales[i] = Sales(as, bs, cs, ds, es);
+        sales[order].caculateSales(as, bs, cs, ds, es);
     }
     
-    sales[0].order('A'); sales[1].order('B');
-    sales[2].order('C'); sales[3].order('D');
-    sales[4].order('E');
+
 
     for (int i = 0; i < SALES_NUMBER; i++)
     {
