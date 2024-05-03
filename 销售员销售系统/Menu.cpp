@@ -196,6 +196,7 @@ void listOption()
     terminalClear();
 
     ios_base::fmtflags old = cout.setf(ios::left, ios::adjustfield);    // 调整为左对齐
+
     cout << endl;
     cout.width(40);
     cout << "0)退出系统                  1)计算某个月每个人每种产品的销售量\n";
@@ -203,9 +204,9 @@ void listOption()
     cout << "2)按销售量对销售员进行排序  3)统计每种产品的总销售量（高到低）\n";
     cout.width(40);
     cout << "4)输出统计报表              5)输出上一个操作\n";
+    cout << endl;
 
     cout.setf(old, ios::adjustfield); // 恢复格式
-    cout << endl;
 }
 
 
