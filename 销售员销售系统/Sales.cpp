@@ -261,7 +261,7 @@ int funcLastOption(int lastOption) {
 
     std::cout << endl;
     std::cout << "上一个操作是： "<< lastOption << std::endl;
-    std::cout << "如果想要知道更多历史操作，请查看目录下文件 option.txt" << std::endl;
+    std::cout << "\n如果想要知道更多历史操作，请查看目录下文件 option.txt" << std::endl;
     std::cout << endl;
     return lastOption;
 }
