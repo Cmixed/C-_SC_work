@@ -258,10 +258,12 @@ void byeMenu()
 
     terminalClear();
 
-    colorPurple();
+    colorGreen();
 
     cout << "\n系统退出" << endl;
-    cout << "\n欢迎下次使用" << endl;
+    cout << "\n欢迎下次使用(按任意键退出)";
+
+    cin.get(); cin.get();
 
     colorDefault();
 }     

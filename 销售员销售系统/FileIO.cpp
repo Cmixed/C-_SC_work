@@ -95,7 +95,32 @@ int fileWrite(int option, int month)
     ios_base::fmtflags old = fout.setf(ios::left, ios::adjustfield);
 
     fout << setw(4) << lineNumber << " : " ;
-    fout << std::put_time(now_tm, "%Y-%m-%d %H:%M:%S") << ' '   << "  月份：" << setw(4) << month <<  "  操作代号：" << option << '\n';
+    fout << std::put_time(now_tm, "%Y-%m-%d %H:%M:%S") << ' '   << "  月份：" << setw(4) << month <<  "  操作代号：" << option;
+
+    switch (option) // 添加操作代号注释
+    {
+    case 0:     // !!!NO USE
+        break;
+    case 1:
+        fout << " ：计算某个月每个人每种产品的销售量\n";
+        break;
+    case 2:
+        fout << " ：按销售量对销售员进行排序\n";
+        break;
+    case 3:
+        fout << " ：统计每种产品的总销售量（高到低）\n";
+        break;
+    case 4:
+        fout << " ：输出统计报表\n";
+        break;
+    case 5:
+        fout << " ：输出上一个操作\n";
+        break;
+    case 6:
+        break;      // !!!NO USE
+    default:
+        break;
+    }
 
     ++lineNumber;
 
