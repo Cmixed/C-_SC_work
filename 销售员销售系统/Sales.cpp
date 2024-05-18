@@ -242,9 +242,11 @@ int outLable(Sales sales[])
     // long long sto[SALES_NUMBER][2] 存储货物的数据
 
 
+    // 设置格式 左对齐，将旧格式存储起来
     ios_base::fmtflags old = cout.setf(ios::left, ios::adjustfield);
 
-    // 20 25 10
+    // 文件格式 ： 20 25 10
+
     // START Line
     cout << setw(20) << "销售员代号" << setw(25) << "             产品代码           " << setw(10) << "   每人销售产品总量" << endl;
     // L0
@@ -270,6 +272,7 @@ int outLable(Sales sales[])
     cout << "销售量最低的为 货物 " << sto[4][0]+1 << " 共卖出 " << setw(5) << sto[4][1] << "件" << endl;
     cout << "\n可以加大货物 " << sto[0][0]+1 << " 的进货量," << "减少货物 " << sto[4][0]+1 << " 的进货量。\n";
 
+    // 恢复文件格式
     cout.setf(old, ios::adjustfield);
 
     return 0;
@@ -278,10 +281,10 @@ int outLable(Sales sales[])
 // 5)输出上一个操作
 int funcLastOption(int lastOption) {
 
+    std::cout << endl << "上一个操作是： " << lastOption << std::endl;
+    std::cout << endl << "如果想要知道更多历史操作，请查看目录下文件 option.txt" << std::endl;
     std::cout << endl;
-    std::cout << "上一个操作是： "<< lastOption << std::endl;
-    std::cout << "\n如果想要知道更多历史操作，请查看目录下文件 option.txt" << std::endl;
-    std::cout << endl;
+
     return lastOption;
 }
 

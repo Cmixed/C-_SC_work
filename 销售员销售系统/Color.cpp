@@ -23,7 +23,6 @@ void colorWhite();  // 字体变白
 
 _COLOR_END  // !namespace color
 
-
 // 字体默认颜色
 void color::colorDefault()
 {
