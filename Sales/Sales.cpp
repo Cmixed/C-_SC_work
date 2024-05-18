@@ -3,11 +3,14 @@
 
 #include <iostream>
 #include <iomanip>
+#include <vector>
+#include <thread>
 
 using namespace std;
 
 // 全局变量
 const int SALES_NUMBER = 5;
+const int GOODS_NUMBER = 5;
 
 // Sales 类
 class Sales
@@ -46,8 +49,10 @@ public:
     friend int funcLastOption(int lastOption); //（0） 输出上一个操作
     friend int caculatePrePeopleSales(Sales sales[]); //（1）	计算某个月每个人每种产品的销售量
     friend int sortSales(Sales sales[]); //（2）	按销售量对销售员进行排序，输出排序结果；
-    friend int sortAll(Sales sales[]); //（3）	统计每种产品的总销售量，对这些产品按从高到低的顺序，输出排序结果（需输出产品的代号和销售量）；
+    friend int sortGoods(Sales sales[]); //（3）	统计每种产品的总销售量，对这些产品按从高到低的顺序，输出排序结果（需输出产品的代号和销售量）；
     friend int outLable(Sales sales[]); //（4）	输出统计报表
+    friend void sortSalesPure(Sales sales[], long long (*arr)[2]);    // 按销售量对销售员进行排序
+    friend void sortGoodsPure(Sales sales[], long long (*sto)[2]);    // 统计每种产品的总销售量，对这些产品按从高到低的顺序
 };
 
 
@@ -107,7 +112,7 @@ int sortSales(Sales sales[])
     //     temp0 = arr[]
     // };
 
-    long long arr[SALES_NUMBER][5];
+    long long arr[SALES_NUMBER][2] = { 0 };
 
     for (int i = 0; i < SALES_NUMBER; i++)
     {
@@ -150,7 +155,7 @@ int sortSales(Sales sales[])
     return 0;
 }
 //（3）	统计每种产品的总销售量，对这些产品按从高到低的顺序，输出排序结果（需输出产品的代号和销售量）；
-int sortAll(Sales sales[])
+int sortGoods(Sales sales[])
 {
     std::cout << std::endl;
     std::cout << "统计每种产品的总销售量（高到低）:" << std::endl;
@@ -213,7 +218,7 @@ int outLable(Sales sales[])
 
     // 来自 sortSales() 计算出每个销售员的销售量
     //（2）	按销售量对销售员进行排序，输出排序结果；
-    long long arr[SALES_NUMBER][5];
+    long long arr[SALES_NUMBER][2] = { 0 };
 
     for (int i = 0; i < SALES_NUMBER; i++)
     {
@@ -248,7 +253,7 @@ int outLable(Sales sales[])
     // 文件格式 ： 20 25 10
 
     // START Line
-    cout << setw(20) << "销售员代号" << setw(25) << "             产品代码           " << setw(10) << "   每人销售产品总量" << endl;
+    cout << setw(20) << "销售员代号" << setw(25) << "            产品代码          " << setw(10) << "每人销售产品总量" << endl;
     // L0
     cout << setw(20) << " " << setw(6) << "1" << setw(6) << "2" << setw(6) << "3" << setw(6) << "4" << setw(6) << "5" << setw(10) << " " << endl;
     // L1
@@ -264,10 +269,38 @@ int outLable(Sales sales[])
     // END Line
     cout << setw(20) << "每种产品销售总量    " << setw(6) << sto[0][1] << setw(6) << sto[1][1] << setw(6) << sto[2][1] << setw(6) << sto[3][1] << setw(6) << sto[4][1] << setw(10) << " " << endl;
 
+    // 智能建议所需要的数据处理
+    // 多线程操作,分别对两个操作单独进行计算
+
+    std::thread t1 ([&sales, &arr]() {  // 使用 lamda 表达式传递给启动线程的函数的参数
+        sortGoodsPure(sales, arr);
+    });
+    std::thread t2 ([&sales, &sto]() {  // lamda 表达式
+        sortGoodsPure(sales, sto);      // [捕获列表](参数列表)->返回类型{函数体}
+    });
+
+    vector<std::thread> threads;    // 创建 vector 泛型模板的 thread 显式实例化对象 以管理线程
+
+    threads.push_back(std::move(t1));   // 将线程加入 threads 对象，使用 move 以移交线程所有权
+    threads.push_back(std::move(t2));   
+
+    // 等待线程完成操作
+    for (auto & val : threads)
+    {
+        if (val.joinable() )    // 判断是否执行完操作
+        {
+            val.join(); // 合并线程
+        }
+    }
+
     // 智能建议
     cout << "\n";
     cout << "一下是根据统计报表的数据所给出的建议:\n\n";
 
+    cout << "销售员中业绩最高的为 销售员 " << (char)(arr[0][0]+'A') << " 共卖出 " << setw(5) << arr[0][1] << "件" << endl;
+    cout << "销售员中业绩最低的为 销售员 " << (char)(arr[4][0]+'A') << " 共卖出 " << setw(5) << arr[4][1] << "件" << endl;
+    cout << "\n可以给予销售员 " << (char)(arr[0][0]+'A') << " 表彰," << "提醒销售员 " << (char)(arr[4][0]+'A') << " 向其学习。\n";
+    cout << endl;
     cout << "销售量最高的为 货物 " << sto[0][0]+1 << " 共卖出 " << setw(5) << sto[0][1] << "件" << endl;
     cout << "销售量最低的为 货物 " << sto[4][0]+1 << " 共卖出 " << setw(5) << sto[4][1] << "件" << endl;
     cout << "\n可以加大货物 " << sto[0][0]+1 << " 的进货量," << "减少货物 " << sto[4][0]+1 << " 的进货量。\n";
@@ -294,5 +327,44 @@ void Sales::caculateSales(int as, int bs, int cs, int ds, int es)
     arr[2] += cs;   arr[3] += ds;
     arr[4] += es;
 }
+
+void sortSalesPure(Sales sales[], long long (*arr)[2] )  // 按销售量对销售员进行排序
+{
+    for (int i = 0; i < SALES_NUMBER-1; i++)
+    {
+        for (int j = 0; j < SALES_NUMBER-i-1; j++)
+        {
+            long long temp1 = 0, temp0 = 0;
+            if (arr[j][1] < arr[j+1][1])
+            {
+                temp1 = arr[j][1];  temp0 = arr[j][0];
+                arr[j][1] = arr[j+1][1];
+                arr[j][0] = arr[j+1][0];
+                arr[j+1][1] = temp1;
+                arr[j+1][0] = temp0;
+            }
+        }
+    }
+}    
+
+void sortGoodsPure(Sales sales[], long long (*sto)[2] )  // 统计每种产品的总销售量，对这些产品按从高到低的顺序
+{
+    for (int i = 0; i < SALES_NUMBER-1; i++)
+    {
+        for (int j = 0; j < SALES_NUMBER-i-1; j++)
+        {
+            long long temp1 = 0, temp0 = 0;
+            if (sto[j][1] < sto[j+1][1])
+            {
+                temp1 = sto[j][1]; temp0 = sto[j][0];
+                sto[j][1] = sto[j+1][1];
+                sto[j][0] = sto[j+1][0];
+                sto[j+1][1] = temp1;
+                sto[j+1][0] = temp0;
+            }
+        }
+    }
+}
+
 
 #endif // !_SALES_CPP

@@ -186,7 +186,7 @@ int optionCase(int option)
         sortSales(sales);
         break;
     case 3:
-        sortAll(sales);
+        sortGoods(sales);
         break;
     case 4:
         outLable(sales);
