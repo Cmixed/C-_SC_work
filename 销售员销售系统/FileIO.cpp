@@ -10,17 +10,25 @@
 #include <fstream>
 #include <chrono>
 #include <iomanip>
-#include "Sales.cpp"
+#include "Sales.cpp"    // Sales 相关操作
 
+// 全局变量
 Sales sales[SALES_NUMBER];
 
-int fileRead(Sales sales[], int month);
-int fileWrite(int option, int month);
+// 函数列表
+int fileRead(Sales sales[], int month); // 文件读入
+int fileWrite(int option, int month);   // 文件写入
 
 
 int fileRead(Sales sales[], int month)
 {
     using namespace std;
+
+    // 清零
+    for (int i = 0; i < SALES_NUMBER; i++)
+    {
+        sales[i] = Sales(i, 0, 0, 0, 0, 0);
+    }
 
     cout << endl;
     cout << "正在读取文件。\n";

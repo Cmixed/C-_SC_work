@@ -6,7 +6,10 @@
 
 using namespace std;
 
+// 全局变量
 const int SALES_NUMBER = 5;
+
+// Sales 类
 class Sales
 {
 private:
@@ -33,17 +36,20 @@ public:
     }
     ~Sales();
 
+// 普通成员函数列表
     void order(char order);
-    void display();
+    void display(); // 显示成员数据
     void caculateSales(int as, int bs, int cs, int ds, int es);   // 累加计算
     void sum();
 
+// 友元函数列表
     friend int funcLastOption(int lastOption); //（0） 输出上一个操作
     friend int caculatePrePeopleSales(Sales sales[]); //（1）	计算某个月每个人每种产品的销售量
     friend int sortSales(Sales sales[]); //（2）	按销售量对销售员进行排序，输出排序结果；
     friend int sortAll(Sales sales[]); //（3）	统计每种产品的总销售量，对这些产品按从高到低的顺序，输出排序结果（需输出产品的代号和销售量）；
     friend int outLable(Sales sales[]); //（4）	输出统计报表
 };
+
 
 // 构造函数：货物序号，货物数量
 Sales::Sales(int goodOrder, int goodMumber)
@@ -70,6 +76,7 @@ void Sales::sum()
     }
 }
 
+// 显示成员数据
 void Sales::display()
 {
     cout << "售货员 " << order_ << " 的各物品售货量" << endl;
@@ -95,6 +102,10 @@ int caculatePrePeopleSales(Sales sales[])
 //（2）	按销售量对销售员进行排序，输出排序结果；
 int sortSales(Sales sales[]) 
 {
+    // auto swap = [](long long ** parr, int order) -> void { 
+    //     long long temp0 = 0, temp1 = 0;
+    //     temp0 = arr[]
+    // };
 
     long long arr[SALES_NUMBER][5];
 
@@ -250,6 +261,14 @@ int outLable(Sales sales[])
     cout << setw(20) << "    E" << setw(6) << sales[4].arr[0] << setw(6) << sales[4].arr[1] << setw(6) << sales[4].arr[2] << setw(6) << sales[4].arr[3] << setw(6) << sales[4].arr[4] << setw(10) << arr[4][1] << endl;
     // END Line
     cout << setw(20) << "每种产品销售总量    " << setw(6) << sto[0][1] << setw(6) << sto[1][1] << setw(6) << sto[2][1] << setw(6) << sto[3][1] << setw(6) << sto[4][1] << setw(10) << " " << endl;
+
+    // 智能建议
+    cout << "\n";
+    cout << "一下是根据统计报表的数据所给出的建议:\n\n";
+
+    cout << "销售量最高的为 货物 " << sto[0][0]+1 << " 共卖出 " << setw(5) << sto[0][1] << "件" << endl;
+    cout << "销售量最低的为 货物 " << sto[4][0]+1 << " 共卖出 " << setw(5) << sto[4][1] << "件" << endl;
+    cout << "\n可以加大货物 " << sto[0][0]+1 << " 的进货量," << "减少货物 " << sto[4][0]+1 << " 的进货量。\n";
 
     cout.setf(old, ios::adjustfield);
 

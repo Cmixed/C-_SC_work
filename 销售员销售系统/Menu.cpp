@@ -2,56 +2,48 @@
 #define MENU_CPP
 
 #include <iostream>
-#include <cstdio>
-#include "Sales.cpp"
-#include "FileIO.cpp"
+#include <cstdio>  
+#include "Sales.cpp"    // Sales 相应操作
+#include "FileIO.cpp"   // 文件输入输出
+#include "Color.cpp"    // 控制台相关
 
 using namespace std;
+using namespace color;  // 控制台相关 名称空间
 
 // 全局变量
 static int month = 0;
 static int option = 0;
 static int lastOption = 0;
-static int flagQuit = 0;    // 退出标志 由 byeMenu()设置
 
 // 外部变量
 extern Sales sales[SALES_NUMBER];   // 来自 FileIO.cpp
 
-// 函数
+// 函数列表
 // 准备工作
 void initSales(Sales sales[]);   // 初始化
 // 菜单相关
-void lableMenu(); // 标题菜单
+void lableMenu(bool flagQuit); // 标题菜单,参数 0 为不退出， 1为退出
 void byeMenu();     // 退出菜单
 void waitMenu();    // 等待菜单
 void listMenu();  // 列出所有的操作
-// 控制台相关
-void terminalClear(); // 清空控制台
-void colorDefault(); // 字体默认颜色
-void colorRed();    // 字体变红
-void colorGreen();  // 字体变绿
-void colorYellow(); // 字体变黄
-void colorBlue();   // 字体变蓝
-void colorPurple(); // 字体变紫
-void colorCyan();   // 字体变青
-void colorWhite();  // 字体变白
 // 操作相关
 int menuMonth();    // 返回 month
 int menuOption();   // 返回 option
 int optionCase(int option); // 调用相应 option 操作
 
 
+// Main 函数 程序起点
 
-int main(int argc, char const *argv[]) {
+int main(int argc, char const *argv[]) 
+{
 
     initSales(sales);   // 初始化
-    lableMenu();      // 欢迎
+    lableMenu(0);      // 欢迎
 
 STARTMONTH:
     month = menuMonth();
 
-    // if (!fileRead(arr, month))   { byeMenu(); goto QUIT;}
-
+    // 文件读入
     if (!fileRead(sales, month))   { byeMenu(); goto QUIT;}
 
     option = menuOption();      // 初始 option
@@ -74,6 +66,7 @@ STARTMONTH:
             goto STARTMONTH;
         }
     }
+
     byeMenu();
 
 QUIT:
@@ -98,7 +91,7 @@ MONTH:// 月份值域 [1, 12]
         if (cin.fail() )
         {
             throw -1; // 意外，非 int 类型 抛出 -1
-        } else if((month > 12 || month < 1) ) 
+        } else if ((month > 12 || month < 1) ) 
         {
             throw "Error!!! 请输入正确的月份"; // 抛出 字符串
         }
@@ -138,10 +131,10 @@ OPTION:// 操作代码值域 [0, 6]
         cout << endl;
         cout << "输入你想进行的操作：" ;
         cin >> option;
-        if(cin.fail() ) 
+        if (cin.fail() ) 
         {
             throw -1; // 意外，非 int 类型 抛出 -1
-        } else if((option > 6 || option < 0) ) 
+        } else if ((option > 6 || option < 0) ) 
         {
             throw "Error!!! 请输入正确的操作选项代号";
         }
@@ -212,32 +205,37 @@ void initSales(Sales sales[])
 }
 
 // 标题菜单
-void lableMenu()
+void lableMenu(bool flagQuit)
 {
-    static int flagFirst = 0;
 
     colorPurple();
     std::cout << "Application:销售员销售系统\n" << endl;
 
-    if (flagFirst && !flagQuit)
+    if (!flagQuit)
     {
-        colorCyan();
-        cout << "# 当前查询月份：" << month << endl;
-    } else if (flagQuit)
+        if (month)
+        {
+            colorCyan();
+            cout << "# 当前查询月份：" << month << endl;
+        } else
+        {
+            colorBlue();
+            cout << "? 当前暂无查询月份" << endl;
+        }
+    } else
     {
         colorRed();
         cout << "! 最后查询月份：" << month << endl;
     }
 
     colorDefault();
-    flagFirst = 1;
     
 }
 
 void terminalClear()
 {
     system("cls");
-    lableMenu();
+    lableMenu(0);
 
     // cout << "\033[2J\033[H"; for liunx to use
 }
@@ -254,14 +252,14 @@ void waitMenu()
 // 退出菜单
 void byeMenu()
 {
-    flagQuit = 1;   // 设置退出标志为 1
 
-    terminalClear();
+    system("cls");
+    lableMenu(1);   // 设置退出标志为 0
 
     colorGreen();
 
     cout << "\n系统退出" << endl;
-    cout << "\n欢迎下次使用(按任意键退出)";
+    cout << "\n欢迎下次使用(按回车键退出)";
 
     cin.get(); cin.get();
 
@@ -293,54 +291,5 @@ void listMenu()
     colorDefault();
 }
 
-// 字体默认颜色
-void colorDefault()
-{
-    cout << "\033[0m";
-}
 
-// 字体变红
-void colorRed()
-{
-    cout << "\033[31m";
-}
-
-// 字体变绿
-void colorGreen()
-{
-    cout << "\033[32m";
-}
-
-// 字体变黄
-void colorYellow()
-{
-    cout << "\033[33m";
-}
-
-// 字体变蓝
-void colorBlue()
-{
-    cout << "\033[34m";
-}
-
-// 字体变紫
-void colorPurple()
-{
-    cout << "\033[35m";
-} 
-
-// 字体变青
-void colorCyan()
-{
-    cout << "\033[36m";
-}
-
-// 字体变白
-void colorWhite()
-{
-    cout << "\033[37m";
-}
-
-
-#endif // !MENU_CPP
- 
+#endif // !MENU_CPP 

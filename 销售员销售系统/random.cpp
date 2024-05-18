@@ -16,7 +16,7 @@ int main()
 
 	ofstream fout("random.txt", ios_base::out | ios_base::trunc);
 	
-	for(int i = 0; i < times; i++)
+	for (int i = 0; i < times; i++)
 	{
 		char sales = 'A';
 		sales += rand()%5;
@@ -26,6 +26,7 @@ int main()
 			<< " 3 " << rand()%10+1 << " 4 " << rand()%10+1
 			<< " 5 " << rand()%10+1 << '\n';
 	}
+	
 	fout.close();
 	
 	cout << endl;
