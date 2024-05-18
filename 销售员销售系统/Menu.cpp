@@ -1,3 +1,6 @@
+// 主菜单文件，负责所有终端显示，面向客户
+// Main 函数所在文件
+
 #ifndef MENU_CPP
 #define MENU_CPP
 
@@ -8,7 +11,7 @@
 #include "Color.cpp"    // 控制台相关
 
 using namespace std;
-using namespace color;  // 控制台相关 名称空间
+using namespace color;  // Color.cpp namespace
 
 // 全局变量
 static int month = 0;
@@ -21,12 +24,12 @@ extern Sales sales[SALES_NUMBER];   // 来自 FileIO.cpp
 // 函数列表
 // 准备工作
 void initSales(Sales sales[]);   // 初始化
-// 菜单相关
-void lableMenu(bool flagQuit); // 标题菜单,参数 0 为不退出， 1为退出
+// 菜单相关函数
+void lableMenu(bool flagQuit); // 标题菜单,参数 0 为退出， 1为正常
 void byeMenu();     // 退出菜单
 void waitMenu();    // 等待菜单
 void listMenu();  // 列出所有的操作
-// 操作相关
+// 用户输入相关处理函数
 int menuMonth();    // 返回 month
 int menuOption();   // 返回 option
 int optionCase(int option); // 调用相应 option 操作
@@ -41,7 +44,8 @@ int main(int argc, char const *argv[])
     lableMenu(0);      // 欢迎
 
 STARTMONTH:
-    month = menuMonth();
+
+    month = menuMonth();    // 读入月份
 
     // 文件读入
     if (!fileRead(sales, month))   { byeMenu(); goto QUIT;}
@@ -67,7 +71,7 @@ STARTMONTH:
         }
     }
 
-    byeMenu();
+    byeMenu();  // 结束菜单
 
 QUIT:
 
@@ -85,29 +89,33 @@ MONTH:// 月份值域 [1, 12]
     // try catch 异常处理
     try
     {
-        cout << endl;
-        cout << "输入你想查询的月份：";
+        cout << endl << "输入你想查询的月份：";
         cin >> month;
+
         if (cin.fail() )
         {
-            throw -1; // 意外，非 int 类型 抛出 -1
+            throw -1; // 异常，非 int 类型 抛出 -1
         } else if ((month > 12 || month < 1) ) 
         {
-            throw "Error!!! 请输入正确的月份"; // 抛出 字符串
+            throw -2; // 异常，不在范围内 抛出 -2
         }
-    } catch (const char * s) // 处理字符串
-    {
-        colorRed();
-        std::cout << s << '\n';
-        colorDefault();
 
-        goto MONTH;
-    } catch (int n) // 处理 -1
+    } catch (int n) // 处理相应的异常
     {
         colorRed();
-        std::cout << "Error!!! 请输入一个整数\n";
+
+        if (-1 == n)    // 非 int 类型 抛出 -1
+        {
+            std::cout << "Error!!! 请输入一个整数\n";
+        } else if (-2 == n) // 不在范围内 抛出 -2
+        {
+            std::cout << "Error!!! 请输入正确的月份" << '\n';
+        }
+
+        // 设置 cin 对象状态 并 清除缓冲区
+        cin.clear(); cin.ignore(1024, '\n'); 
+
         colorDefault();
-        cin.clear(); cin.ignore(1024, '\n'); // 用于设置 cin 对象状态 并 清除缓冲区
 
         goto MONTH;
     }
@@ -128,29 +136,32 @@ OPTION:// 操作代码值域 [0, 6]
 
     try
     {
-        cout << endl;
-        cout << "输入你想进行的操作：" ;
+        cout << endl << "输入你想进行的操作：" ;
         cin >> option;
+
         if (cin.fail() ) 
         {
-            throw -1; // 意外，非 int 类型 抛出 -1
+            throw -1;   // 异常，非 int 类型 抛出 -1
         } else if ((option > 6 || option < 0) ) 
         {
-            throw "Error!!! 请输入正确的操作选项代号";
+            throw -2; // 异常，不在范围内 抛出 -2
         }
-    } catch (const char * s) 
+    } catch (int n) // 处理相应的异常
     {
         colorRed();
-        std::cout << s << '\n';
-        colorDefault();
 
-        goto OPTION;
-    } catch (int n) 
-    {
-        colorRed();
-        std::cout << "Error!!! 请输入一个整数\n";
+        if (-1 == n)    // 非 int 类型 抛出 -1
+        {
+            std::cout << "Error!!! 请输入一个整数\n";
+        } else if (-2 == n) // 不在范围内 抛出 -2
+        {
+            std::cout << "Error!!! 请输入正确的操作选项代号" << '\n';
+        }
+        
+        // 设置 cin 对象状态 并 清除缓冲区
+        cin.clear();    cin.ignore(1024, '\n');  
+
         colorDefault();
-        cin.clear();    cin.ignore(1024, '\n');  // 用于设置 cin 对象状态 并 清除缓冲区
 
         goto OPTION;
     }
@@ -189,6 +200,7 @@ int optionCase(int option)
         break;
     default:
         cout << "NO Related Option!!!" << endl;
+        // 防止意外
         break;
     }
 
@@ -204,9 +216,11 @@ void initSales(Sales sales[])
     }
 }
 
-// 标题菜单
+// 标题菜单,参数 0 为退出， 1为正常
 void lableMenu(bool flagQuit)
 {
+    // flagQuit == 0 时，状态为 退出
+    // flagQuit == 0 时，状态正常
 
     colorPurple();
     std::cout << "Application:销售员销售系统\n" << endl;
@@ -235,7 +249,8 @@ void lableMenu(bool flagQuit)
 void terminalClear()
 {
     system("cls");
-    lableMenu(0);
+
+    lableMenu(0);   // 传递参数 0， falgQuit = 0，状态栏状态正常
 
     // cout << "\033[2J\033[H"; for liunx to use
 }
@@ -243,22 +258,25 @@ void terminalClear()
 void waitMenu()
 {
     colorGreen();
-    cout << endl;
-    cout << "按回车键以进行下一项操作";
-    colorDefault();
+
+    cout << endl << "按回车键以进行下一项操作";
+    
     cin.get(); cin.get();
+
+    colorDefault();
 }
 
 // 退出菜单
 void byeMenu()
 {
 
-    system("cls");
-    lableMenu(1);   // 设置退出标志为 0
+    system("cls");  // 清空终端
+
+    lableMenu(1);   // 传递参数 1， falgQuit = 1，状态栏状态为退出
 
     colorGreen();
 
-    cout << "\n系统退出" << endl;
+    cout << "\n系统退出\n";
     cout << "\n欢迎下次使用(按回车键退出)";
 
     cin.get(); cin.get();
@@ -269,7 +287,7 @@ void byeMenu()
 // 列出选项
 void listMenu()
 {
-    terminalClear();
+    terminalClear();    // 清空终端
 
     colorYellow();
 

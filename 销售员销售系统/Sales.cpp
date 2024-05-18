@@ -1,5 +1,5 @@
-#ifndef SALES_CPP
-#define SALES_CPP
+#ifndef _SALES_CPP
+#define _SALES_CPP
 
 #include <iostream>
 #include <iomanip>
@@ -292,4 +292,4 @@ void Sales::caculateSales(int as, int bs, int cs, int ds, int es)
     arr[4] += es;
 }
 
-#endif // !SALES_CPP
+#endif // !_SALES_CPP
