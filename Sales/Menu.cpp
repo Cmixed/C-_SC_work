@@ -42,7 +42,7 @@ int main(int argc, char const *argv[])
 {
 
     initSales(sales);   // 初始化
-    lableMenu(0, 0);      // 欢迎
+    lableMenu(0, 0);      // 初始化菜单栏
 
 STARTMONTH:
 
@@ -53,18 +53,14 @@ STARTMONTH:
 
     option = menuOption();      // 初始 option
 
-    if (option == 6)    // 切换月份
-    {
-        goto STARTMONTH;
-    }
+    // 判断是否切换月份
+    if (6 == option) { goto STARTMONTH; }
 
     while (option)
     {
-        
         clearMenu(0);    // 清空终端
 
-        optionCase(option);     // 调用相应 option 操作
-        lastOption = option;    // 初始化 lastoption
+        lastOption =  optionCase(option);     // 调用相应 option 操作 并 初始化 lastoption
 
         fileWrite(lastOption, month); // 将刚才的操作存入文件
 
@@ -72,10 +68,8 @@ STARTMONTH:
     
         option = menuOption();  // 更新 option
 
-        if (option == 6)    // 切换月份
-        {
-            goto STARTMONTH;
-        }
+        // 判断是否切换月份
+        if (6 == option) { goto STARTMONTH; }
 
     }
 
@@ -203,8 +197,8 @@ int optionCase(int option)
         funcLastOption(lastOption);
         break;
     case 6:
-        cout << "Impossible!!!";
         // 切换操作月份，使用 goto 在 main 中实现
+        cout << "Impossible!!!";    
         break;
     default:
         cout << "NO Related Option!!!" << endl;
