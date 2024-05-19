@@ -25,10 +25,11 @@ extern Sales sales[SALES_NUMBER];   // 来自 FileIO.cpp
 // 准备工作
 void initSales(Sales sales[]);   // 初始化
 // 菜单相关函数
-void lableMenu(bool flagQuit); // 标题菜单,参数 0 为退出， 1为正常
+void lableMenu(bool flagQuit, bool flagEnterNew); // 标题菜单,参数1 0 为退出， 1为正常, 参数2 0 操作界面， 1 选项界面
 void byeMenu();     // 退出菜单
 void waitMenu();    // 等待菜单
 void listMenu();  // 列出所有的操作
+void clearMenu(bool flagEnterNew);    // 清空菜单
 // 用户输入相关处理函数
 int menuMonth();    // 返回 month
 int menuOption();   // 返回 option
@@ -41,7 +42,7 @@ int main(int argc, char const *argv[])
 {
 
     initSales(sales);   // 初始化
-    lableMenu(0);      // 欢迎
+    lableMenu(0, 0);      // 欢迎
 
 STARTMONTH:
 
@@ -59,16 +60,23 @@ STARTMONTH:
 
     while (option)
     {
+        
+        clearMenu(0);    // 清空终端
+
         optionCase(option);     // 调用相应 option 操作
         lastOption = option;    // 初始化 lastoption
-        fileWrite(lastOption, month);
+
+        fileWrite(lastOption, month); // 将刚才的操作存入文件
+
         waitMenu();             // 等待
+    
         option = menuOption();  // 更新 option
 
         if (option == 6)    // 切换月份
         {
             goto STARTMONTH;
         }
+
     }
 
     byeMenu();  // 结束菜单
@@ -217,20 +225,45 @@ void initSales(Sales sales[])
 }
 
 // 标题菜单,参数 0 为退出， 1为正常
-void lableMenu(bool flagQuit)
+void lableMenu(bool flagQuit, bool flagEnterNew)
 {
-    // flagQuit == 0 时，状态为 退出
+    // flagQuit == 1 时，状态为 退出
     // flagQuit == 0 时，状态正常
 
-    colorPurple();
+    // flagEnterNew == 1 时， 输入新的操作
+    // flagEnterNew == 0 时， 没输入新的操作
+
+    colorPurple();  // 标题紫色
+
     std::cout << "Application:销售员销售系统\n" << endl;
 
-    if (!flagQuit)
+    if (!flagQuit)  // 正常状态
     {
         if (month)
         {
-            colorCyan();
+            colorCyan();    // 青色
+
             cout << "# 当前查询月份：" << month << endl;
+            
+            if (option) // 添加操作选项状态
+            {
+                // 操作选项状态 option 界面 还是 选项吧执行界面
+                if (!flagEnterNew)
+                {
+                    cout << "# 当前操作选项：" << option;
+                } else
+                {
+                    cout << "& 刚才操作选项：" << option;
+                }
+                
+                switchOption(option);
+
+            }
+            else
+            {
+                cout << "? 当前暂无操作选项" << endl;
+            }
+            
         } else
         {
             colorBlue();
@@ -240,17 +273,29 @@ void lableMenu(bool flagQuit)
     {
         colorRed();
         cout << "! 最后查询月份：" << month << endl;
+        cout << "! 最后操作选项：" << lastOption;
+
+        switchOption(lastOption);
+        
     }
+
+    // 恢复 flagEnterNew 变量的值
+
+    if (flagEnterNew)
+    {
+        flagEnterNew = 0;        
+    }
+
 
     colorDefault();
     
 }
 
-void terminalClear()
+void clearMenu(bool flagEnterNew)
 {
     system("cls");
-
-    lableMenu(0);   // 传递参数 0， falgQuit = 0，状态栏状态正常
+    
+    lableMenu(0, flagEnterNew);   // 传递参数 0， falgQuit = 0，状态栏状态正常
 
     // cout << "\033[2J\033[H"; for liunx to use
 }
@@ -272,7 +317,7 @@ void byeMenu()
 
     system("cls");  // 清空终端
 
-    lableMenu(1);   // 传递参数 1， falgQuit = 1，状态栏状态为退出
+    lableMenu(1, 0);   // 传递参数 1， falgQuit = 1，状态栏状态为退出
 
     colorGreen();
 
@@ -287,7 +332,7 @@ void byeMenu()
 // 列出选项
 void listMenu()
 {
-    terminalClear();    // 清空终端
+    clearMenu(1);    // 清空终端
 
     colorYellow();
 

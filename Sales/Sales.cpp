@@ -11,6 +11,7 @@ using namespace std;
 // 全局变量
 const int SALES_NUMBER = 5;
 const int GOODS_NUMBER = 5;
+const int OPTION_NUMBER = 7;
 
 // Sales 类
 class Sales
@@ -46,7 +47,7 @@ public:
     void sum();
 
 // 友元函数列表
-    friend int funcLastOption(int lastOption); //（0） 输出上一个操作
+    friend int funcLastOption(int lastOption); //（5） 输出上一个操作
     friend int caculatePrePeopleSales(Sales sales[]); //（1）	计算某个月每个人每种产品的销售量
     friend int sortSales(Sales sales[]); //（2）	按销售量对销售员进行排序，输出排序结果；
     friend int sortGoods(Sales sales[]); //（3）	统计每种产品的总销售量，对这些产品按从高到低的顺序，输出排序结果（需输出产品的代号和销售量）；
@@ -55,6 +56,8 @@ public:
     friend void sortGoodsPure(Sales sales[], long long (*sto)[2]);    // 统计每种产品的总销售量，对这些产品按从高到低的顺序
 };
 
+// 函数列表
+void switchOption(int option);
 
 // 构造函数：货物序号，货物数量
 Sales::Sales(int goodOrder, int goodMumber)
@@ -314,7 +317,10 @@ int outLable(Sales sales[])
 // 5)输出上一个操作
 int funcLastOption(int lastOption) {
 
-    std::cout << endl << "上一个操作是： " << lastOption << std::endl;
+    std::cout << endl << "上一个操作是： " << lastOption;
+
+    switchOption(lastOption);
+
     std::cout << endl << "如果想要知道更多历史操作，请查看目录下文件 option.txt" << std::endl;
     std::cout << endl;
 
@@ -365,6 +371,37 @@ void sortGoodsPure(Sales sales[], long long (*sto)[2] )  // 统计每种产品�
         }
     }
 }
+
+void switchOption(int option)
+{
+    switch (option) // 添加操作代号注释
+    {
+        case 0:
+            cout << " ：退出系统\n";
+            break;
+        case 1:
+            cout << " ：计算某个月每个人每种产品的销售量\n";
+            break;
+        case 2:
+            cout << " ：按销售量对销售员进行排序\n";
+            break;
+        case 3:
+            cout << " ：统计每种产品的总销售量（高到低）\n";
+            break;
+        case 4:
+            cout << " ：输出统计报表\n";
+            break;
+        case 5:
+            cout << " ：输出上一个操作\n";
+            break;
+        case 6:
+            cout << " ：更改操作月份\n";
+            break;
+        default:
+            break;
+    }
+}
+
 
 
 #endif // !_SALES_CPP
