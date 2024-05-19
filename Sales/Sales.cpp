@@ -52,8 +52,7 @@ public:
     friend int sortSales(Sales sales[]); //（2）	按销售量对销售员进行排序，输出排序结果；
     friend int sortGoods(Sales sales[]); //（3）	统计每种产品的总销售量，对这些产品按从高到低的顺序，输出排序结果（需输出产品的代号和销售量）；
     friend int outLable(Sales sales[]); //（4）	输出统计报表
-    friend void sortSalesPure(Sales sales[], long long (*arr)[2]);    // 按销售量对销售员进行排序
-    friend void sortGoodsPure(Sales sales[], long long (*sto)[2]);    // 统计每种产品的总销售量，对这些产品按从高到低的顺序
+    friend void sortPure(Sales sales[], long long (*arr)[2] );  // // 二维数组排序 arr[SALES_NUMBER][2] 类型 (2 (3 (4 使用
 };
 
 // 函数列表
@@ -123,21 +122,7 @@ int sortSales(Sales sales[])
         arr[i][1] = sales[i].sum_;
     }
     
-    for (int i = 0; i < SALES_NUMBER-1; i++)
-    {
-        for (int j = 0; j < SALES_NUMBER-i-1; j++)
-        {
-            long long temp1 = 0, temp0 = 0;
-            if (arr[j][1] < arr[j+1][1])
-            {
-                temp1 = arr[j][1];  temp0 = arr[j][0];
-                arr[j][1] = arr[j+1][1];
-                arr[j][0] = arr[j+1][0];
-                arr[j+1][1] = temp1;
-                arr[j+1][0] = temp0;
-            }
-        }
-    }
+    sortPure(sales, arr);  // 排序
 
     std::cout << std::endl;
     std::cout << "按销售量对销售员进行排序的排序结果；\n";
@@ -176,22 +161,8 @@ int sortGoods(Sales sales[])
             sto[i][1] += sales[j].arr[i];
         }
     }
-    // 进行冒泡排序
-    for (int i = 0; i < SALES_NUMBER-1; i++)
-    {
-        for (int j = 0; j < SALES_NUMBER-i-1; j++)
-        {
-            long long temp1 = 0, temp0 = 0;
-            if (sto[j][1] < sto[j+1][1])
-            {
-                temp1 = sto[j][1]; temp0 = sto[j][0];
-                sto[j][1] = sto[j+1][1];
-                sto[j][0] = sto[j+1][0];
-                sto[j+1][1] = temp1;
-                sto[j+1][0] = temp0;
-            }
-        }
-    }
+
+    sortPure(sales, sto);  // 排序
     
     std::cout << std::endl;
     std::cout << "每种产品的总销售量（高到低）：\n";
@@ -276,10 +247,10 @@ int outLable(Sales sales[])
     // 多线程操作,分别对两个操作单独进行计算
 
     std::thread t1 ([&sales, &arr]() {  // 使用 lamda 表达式传递给启动线程的函数的参数
-        sortGoodsPure(sales, arr);
+        sortPure(sales, arr);
     });
     std::thread t2 ([&sales, &sto]() {  // lamda 表达式
-        sortGoodsPure(sales, sto);      // [捕获列表](参数列表)->返回类型{函数体}
+        sortPure(sales, sto);      // [捕获列表](参数列表)->返回类型{函数体}
     });
 
     vector<std::thread> threads;    // 创建 vector 泛型模板的 thread 显式实例化对象 以管理线程
@@ -334,7 +305,7 @@ void Sales::caculateSales(int as, int bs, int cs, int ds, int es)
     arr[4] += es;
 }
 
-void sortSalesPure(Sales sales[], long long (*arr)[2] )  // 按销售量对销售员进行排序
+void sortPure(Sales sales[], long long (*arr)[2] )  // 二维数组排序 arr[SALES_NUMBER][2] 类型
 {
     for (int i = 0; i < SALES_NUMBER-1; i++)
     {
@@ -353,24 +324,6 @@ void sortSalesPure(Sales sales[], long long (*arr)[2] )  // 按销售量对销�
     }
 }    
 
-void sortGoodsPure(Sales sales[], long long (*sto)[2] )  // 统计每种产品的总销售量，对这些产品按从高到低的顺序
-{
-    for (int i = 0; i < SALES_NUMBER-1; i++)
-    {
-        for (int j = 0; j < SALES_NUMBER-i-1; j++)
-        {
-            long long temp1 = 0, temp0 = 0;
-            if (sto[j][1] < sto[j+1][1])
-            {
-                temp1 = sto[j][1]; temp0 = sto[j][0];
-                sto[j][1] = sto[j+1][1];
-                sto[j][0] = sto[j+1][0];
-                sto[j+1][1] = temp1;
-                sto[j+1][0] = temp0;
-            }
-        }
-    }
-}
 
 void switchOption(int option)
 {
