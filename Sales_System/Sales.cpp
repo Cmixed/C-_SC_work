@@ -5,6 +5,8 @@
 #include <iomanip>
 #include <vector>
 #include <thread>
+#include <cstdlib>
+#include <string>
 
 using namespace std;
 
@@ -47,11 +49,11 @@ public:
     void sum();
 
 // 友元函数列表
-    friend int funcLastOption(int lastOption); //（5） 输出上一个操作
     friend int caculatePrePeopleSales(Sales sales[]); //（1）	计算某个月每个人每种产品的销售量
     friend int sortSales(Sales sales[]); //（2）	按销售量对销售员进行排序，输出排序结果；
     friend int sortGoods(Sales sales[]); //（3）	统计每种产品的总销售量，对这些产品按从高到低的顺序，输出排序结果（需输出产品的代号和销售量）；
     friend int outLable(Sales sales[]); //（4）	输出统计报表
+    friend int funcHistoryOption(int lastOption); //（5） 获取更多历史操作
     friend void sortPure(Sales sales[], long long (*arr)[2] );  // // 二维数组排序 arr[SALES_NUMBER][2] 类型 (2 (3 (4 使用
 };
 
@@ -244,7 +246,7 @@ int outLable(Sales sales[])
     cout << setw(20) << "每种产品销售总量    " << setw(6) << sto[0][1] << setw(6) << sto[1][1] << setw(6) << sto[2][1] << setw(6) << sto[3][1] << setw(6) << sto[4][1] << setw(10) << " " << endl;
 
     // 智能建议所需要的数据处理
-    // 多线程操作,分别对两个操作单独进行计算
+    // 多线程操作,创建并启动两个线程来对不同的数据集进行排序
 
     std::thread t1 ([&sales, &arr]() {  // 使用 lamda 表达式传递给启动线程的函数的参数
         sortPure(sales, arr);
@@ -261,7 +263,7 @@ int outLable(Sales sales[])
     // 等待线程完成操作
     for (auto & val : threads)
     {
-        if (val.joinable() )    // 判断是否执行完操作
+        if (val.joinable() )    // 检查线程是否仍可加入，即是否已完成执行
         {
             val.join(); // 合并线程
         }
@@ -286,15 +288,34 @@ int outLable(Sales sales[])
 }
 
 // 5)输出上一个操作
-int funcLastOption(int lastOption) {
+/**
+ * @brief 显示历史操作选项的函数
+ * 
+ * 该函数尝试在当前目录下打开一个名为option.txt的文件，以便用户查看更多的历史操作信息。
+ * 如果文件打开失败，将向用户显示错误信息。
+ * 
+ * @param lastOption 上一次选择的选项，函数将其原样返回。
+ * @return int 返回上一次选择的选项。
+ */
+int funcHistoryOption(int lastOption) {
 
-    std::cout << endl << "上一个操作是： " << lastOption;
-
-    switchOption(lastOption);
-
-    std::cout << endl << "如果想要知道更多历史操作，请查看目录下文件 option.txt" << std::endl;
+    // 向用户提示可以打开option.txt文件查看历史操作
+    std::cout << endl << "打开目录下文件 option.txt ，获取更多历史操作。" << std::endl;
     std::cout << endl;
 
+    // 定义要打开的文件名
+    std::string filename = ".\\option.txt"; 
+
+    // 尝试使用系统命令打开文件，如果失败则输出错误信息
+    if (system(("start " + filename).c_str() ) ) {
+        std::cerr << "文件打开失败: " << filename << "!" << std::endl;
+        std::cerr << "请检查系统完备性。" << std::endl;
+    }
+ 
+    // 文件打开成功，向用户提示
+    std::cout << "文件已成功打开: " << filename <<  "!" << std::endl;
+
+    // 返回上一次选择的选项
     return lastOption;
 }
 
@@ -307,21 +328,63 @@ void Sales::caculateSales(int as, int bs, int cs, int ds, int es)
 
 void sortPure(Sales sales[], long long (*arr)[2] )  // 二维数组排序 arr[SALES_NUMBER][2] 类型
 {
+/*
+    // 自动与许下一个值进行比较，小于则交换
+	auto swapCompareChoseBigger = [] (long long (*arr)[2], int j) {
+
+        long long temp0 = 0, temp1 = 0;
+		if (arr[j][1] < arr[j+1][1])
+		{
+			temp0 = arr[j][0]; temp1 = arr[j][1];
+			arr[j][0] = arr[j+1][0];
+			arr[j][1] = arr[j+1][1];
+			arr[j+1][0] = temp0;
+			arr[j+1][1] = temp1;
+		}
+
+	};
+
+    // 自动与许下一个值进行比较，大于则交换
+	auto swapCompareChoseSmaller = [] (long long (*arr)[2], int j) {
+
+        long long temp0 = 0, temp1 = 0;
+		if (arr[j][1] > arr[j+1][1])
+		{
+			temp0 = arr[j][0]; temp1 = arr[j][1];
+			arr[j][0] = arr[j+1][0];
+			arr[j][1] = arr[j+1][1];
+			arr[j+1][0] = temp0;
+			arr[j+1][1] = temp1;
+		}
+
+	};
+
+    // 冒泡排序
     for (int i = 0; i < SALES_NUMBER-1; i++)
     {
         for (int j = 0; j < SALES_NUMBER-i-1; j++)
         {
-            long long temp1 = 0, temp0 = 0;
-            if (arr[j][1] < arr[j+1][1])
-            {
-                temp1 = arr[j][1];  temp0 = arr[j][0];
-                arr[j][1] = arr[j+1][1];
-                arr[j][0] = arr[j+1][0];
-                arr[j+1][1] = temp1;
-                arr[j+1][0] = temp0;
-            }
+            swapCompareChoseBigger(arr, j);
         }
     }
+*/
+    // 冒泡排序, 由大到小
+    for (int i = 0; i < SALES_NUMBER-1; i++)
+    {
+        for (int j = 0; j < SALES_NUMBER-i-1; j++)
+        {
+            long long temp0 = 0, temp1 = 0;
+		    if (arr[j][1] < arr[j+1][1])
+		    {
+			    temp0 = arr[j][0]; temp1 = arr[j][1];
+			    arr[j][0] = arr[j+1][0];
+			    arr[j][1] = arr[j+1][1];
+			    arr[j+1][0] = temp0;
+			    arr[j+1][1] = temp1;
+		    }
+        }
+    }
+
 }    
 
 
@@ -345,7 +408,7 @@ void switchOption(int option)
             cout << " ：输出统计报表\n";
             break;
         case 5:
-            cout << " ：输出上一个操作\n";
+            cout << " ：获取更多历史操作\n";
             break;
         case 6:
             cout << " ：更改操作月份\n";

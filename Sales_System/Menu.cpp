@@ -194,7 +194,7 @@ int optionCase(int option)
         outLable(sales);
         break;
     case 5:
-        funcLastOption(lastOption);
+        funcHistoryOption(lastOption);
         break;
     case 6:
         // 切换操作月份，使用 goto 在 main 中实现
@@ -338,7 +338,7 @@ void listMenu()
     cout.width(40);
     cout << "2)按销售量对销售员进行排序  3)统计每种产品的总销售量（高到低）\n";
     cout.width(40);
-    cout << "4)输出统计报表              5)输出上一个操作\n";
+    cout << "4)输出统计报表              5)获取更多历史操作\n";
     cout.width(40);
     cout << "6)更改操作月份\n";
     cout << endl;

@@ -19,7 +19,6 @@ Sales sales[SALES_NUMBER];
 int fileRead(Sales sales[], int month); // 文件读入
 int fileWrite(int option, int month);   // 文件写入
 
-
 int fileRead(Sales sales[], int month)
 {
     using namespace std;
@@ -122,7 +121,7 @@ int fileWrite(int option, int month)
         fout << " ：输出统计报表\n";
         break;
     case 5:
-        fout << " ：输出上一个操作\n";
+        fout << " ：获取更多历史操作\n";
         break;
     case 6:
         break;      // !!!NO USE
