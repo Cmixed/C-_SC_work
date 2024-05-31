@@ -13,7 +13,7 @@ using namespace std;
 // 全局变量
 const int SALES_NUMBER = 5;
 const int GOODS_NUMBER = 5;
-const int OPTION_NUMBER = 7;
+const int OPTION_NUMBER = 6;
 
 // Sales 类
 class Sales
@@ -21,18 +21,11 @@ class Sales
 private:
     /* data */
     char order_ = 'N';
-    int arr[5] = { 0 }; 
+    int arr[GOODS_NUMBER] = { 0 }; 
     long long int sum_ = 0;
 public:
     Sales() = default;
-    Sales(int goodOrder, int goodMumber);
-    Sales(int as, int bs, int cs, int ds, int es) 
-    {
-        arr[0] += as;    arr[1] += bs;
-        arr[2] += cs;    arr[3] += ds;
-        arr[4] += es;
-    }
-    Sales(int SalseOrder, int as, int bs, int cs, int ds, int es) 
+    Sales(int SalseOrder, int as, int bs, int cs, int ds, int es)
     {
         char order = (char)(SalseOrder + 'A');
         order_ = order;
@@ -47,25 +40,24 @@ public:
     void display(); // 显示成员数据
     void caculateSales(int as, int bs, int cs, int ds, int es);   // 累加计算
     void sum();
-
 // 友元函数列表
-    friend int caculatePrePeopleSales(Sales sales[]); //（1）	计算某个月每个人每种产品的销售量
     friend int sortSales(Sales sales[]); //（2）	按销售量对销售员进行排序，输出排序结果；
     friend int sortGoods(Sales sales[]); //（3）	统计每种产品的总销售量，对这些产品按从高到低的顺序，输出排序结果（需输出产品的代号和销售量）；
     friend int outLable(Sales sales[]); //（4）	输出统计报表
-    friend int funcHistoryOption(int lastOption); //（5） 获取更多历史操作
-    friend void sortPure(Sales sales[], long long (*arr)[2] );  // // 二维数组排序 arr[SALES_NUMBER][2] 类型 (2 (3 (4 使用
 };
 
 // 函数列表
-void switchOption(int option);
+// 选项操作
+int caculatePrePeopleSales(Sales sales[]); //（1）	计算某个月每个人每种产品的销售量
+int sortSales(Sales sales[]); //（2）	按销售量对销售员进行排序，输出排序结果；
+int sortGoods(Sales sales[]); //（3）	统计每种产品的总销售量，对这些产品按从高到低的顺序，输出排序结果（需输出产品的代号和销售量）；
+int outLable(Sales sales[]); //（4）	输出统计报表
+int funcHistoryOption(int lastOption); //（5） 获取更多历史操作
+void sortPure(Sales sales[], long long (*arr)[2] );  // 二维数组排序 arr[SALES_NUMBER][2] 类型 (2 (3 (4 使用
 
-// 构造函数：货物序号，货物数量
-Sales::Sales(int goodOrder, int goodMumber)
-{
-    // 序号比数组的序号大一，所以 arr[]参数要减一
-    arr[--goodOrder] = goodMumber;
-}
+void initSales(Sales sales[]);   // 清零
+void switchOptionText(int option);
+
 
 Sales::~Sales()
 {
@@ -111,10 +103,6 @@ int caculatePrePeopleSales(Sales sales[])
 //（2）	按销售量对销售员进行排序，输出排序结果；
 int sortSales(Sales sales[]) 
 {
-    // auto swap = [](long long ** parr, int order) -> void { 
-    //     long long temp0 = 0, temp1 = 0;
-    //     temp0 = arr[]
-    // };
 
     long long arr[SALES_NUMBER][2] = { 0 };
 
@@ -328,46 +316,6 @@ void Sales::caculateSales(int as, int bs, int cs, int ds, int es)
 
 void sortPure(Sales sales[], long long (*arr)[2] )  // 二维数组排序 arr[SALES_NUMBER][2] 类型
 {
-/*
-    // 自动与许下一个值进行比较，小于则交换
-	auto swapCompareChoseBigger = [] (long long (*arr)[2], int j) {
-
-        long long temp0 = 0, temp1 = 0;
-		if (arr[j][1] < arr[j+1][1])
-		{
-			temp0 = arr[j][0]; temp1 = arr[j][1];
-			arr[j][0] = arr[j+1][0];
-			arr[j][1] = arr[j+1][1];
-			arr[j+1][0] = temp0;
-			arr[j+1][1] = temp1;
-		}
-
-	};
-
-    // 自动与许下一个值进行比较，大于则交换
-	auto swapCompareChoseSmaller = [] (long long (*arr)[2], int j) {
-
-        long long temp0 = 0, temp1 = 0;
-		if (arr[j][1] > arr[j+1][1])
-		{
-			temp0 = arr[j][0]; temp1 = arr[j][1];
-			arr[j][0] = arr[j+1][0];
-			arr[j][1] = arr[j+1][1];
-			arr[j+1][0] = temp0;
-			arr[j+1][1] = temp1;
-		}
-
-	};
-
-    // 冒泡排序
-    for (int i = 0; i < SALES_NUMBER-1; i++)
-    {
-        for (int j = 0; j < SALES_NUMBER-i-1; j++)
-        {
-            swapCompareChoseBigger(arr, j);
-        }
-    }
-*/
     // 冒泡排序, 由大到小
     for (int i = 0; i < SALES_NUMBER-1; i++)
     {
@@ -388,7 +336,7 @@ void sortPure(Sales sales[], long long (*arr)[2] )  // 二维数组排序 arr[SA
 }    
 
 
-void switchOption(int option)
+void switchOptionText(int option)
 {
     switch (option) // 添加操作代号注释
     {
@@ -418,6 +366,14 @@ void switchOption(int option)
     }
 }
 
+// 清零
+void initSales(Sales sales[])
+{
+    for (int i = 0; i < SALES_NUMBER; i++)
+    {
+        sales[i] = Sales(i, 0, 0, 0, 0, 0);
+    }
+}
 
 
 #endif // !_SALES_CPP

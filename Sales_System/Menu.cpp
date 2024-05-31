@@ -20,10 +20,9 @@ static int lastOption = 0;
 
 // 外部变量
 extern Sales sales[SALES_NUMBER];   // 来自 FileIO.cpp
+extern const int OPTION_NUMBER;     // 来自 Sales.cpp
 
 // 函数列表
-// 准备工作
-void initSales(Sales sales[]);   // 初始化
 // 菜单相关函数
 void lableMenu(bool flagQuit, bool flagEnterNew); // 标题菜单,参数1 0 为退出， 1为正常, 参数2 0 操作界面， 1 选项界面
 void byeMenu();     // 退出菜单
@@ -144,7 +143,7 @@ OPTION:// 操作代码值域 [0, 6]
         if (cin.fail() ) 
         {
             throw -1;   // 异常，非 int 类型 抛出 -1
-        } else if ((option > 6 || option < 0) ) 
+        } else if ((option > OPTION_NUMBER || option < 0) ) 
         {
             throw -2; // 异常，不在范围内 抛出 -2
         }
@@ -209,14 +208,6 @@ int optionCase(int option)
     return option;
 }
 
-// 初始化
-void initSales(Sales sales[])
-{
-    for (int i = 0; i < SALES_NUMBER; i++)
-    {
-        sales[i] = Sales(i, 0, 0, 0, 0, 0);
-    }
-}
 
 // 标题菜单,参数 0 为退出， 1为正常
 void lableMenu(bool flagQuit, bool flagEnterNew)
@@ -250,7 +241,7 @@ void lableMenu(bool flagQuit, bool flagEnterNew)
                     cout << "& 刚才操作选项：" << option;
                 }
                 
-                switchOption(option);
+                switchOptionText(option);
 
             }
             else
@@ -269,7 +260,7 @@ void lableMenu(bool flagQuit, bool flagEnterNew)
         cout << "! 最后查询月份：" << month << endl;
         cout << "! 最后操作选项：" << lastOption;
 
-        switchOption(lastOption);
+        switchOptionText(lastOption);
         
     }
 

@@ -23,12 +23,8 @@ int fileRead(Sales sales[], int month)
 {
     using namespace std;
 
-    // 清零
-    for (int i = 0; i < SALES_NUMBER; i++)
-    {
-        sales[i] = Sales(i, 0, 0, 0, 0, 0);
-    }
-
+    initSales(sales);
+    
     cout << endl;
     cout << "正在读取文件。\n";
 	
@@ -135,43 +131,3 @@ int fileWrite(int option, int month)
     fout.close();
     return true;
 }
-
-
-/* 旧的实现
-int fileRead(int arr[31][SALES_NUMBER][GOODS_NUMBER], int month)
-{
-    cout << endl;
-    cout << "正在读取文件。\n";
-	
-    // FILE * fp = fopen("data.txt", "r");
-    ifstream fin("data.txt", ios_base::in | ios_base::binary);
-
-    char SalseOrder;
-    int temmonth, a, as, b, bs, c, cs, d, ds, e, es;
-
-    for (int i = 0; i < 31; i++)
-    {
-        fin >> temmonth >> SalseOrder >> a >> as
-            >> b >> bs >> c >> cs >> d >> ds >> e >> es;
-
-        if (temmonth == month)
-        {
-            cout << SalseOrder;
-        } else if (temmonth < month)
-        {
-            --i; continue;
-        } else if (temmonth > month)
-        {
-            break;
-        }
-
-    }
-    
-    
-
-    fin.close();
-    cout << "读取文件成功！\n";
-    
-    return true;
-}
-*/
