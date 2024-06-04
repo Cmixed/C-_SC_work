@@ -251,10 +251,7 @@ int outLable(Sales sales[])
     // 等待线程完成操作
     for (auto & val : threads)
     {
-        if (val.joinable() )    // 检查线程是否仍可加入，即是否已完成执行
-        {
-            val.join(); // 合并线程
-        }
+        val.join(); // 合并线程
     }
 
     // 智能建议

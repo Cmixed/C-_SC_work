@@ -11,7 +11,7 @@
 
 _COLOR_BEGIN    // 名称空间起始处
 
-// 函数列表
+/*函数列表*/
 void colorDefault(); // 字体默认颜色
 void colorRed();    // 字体变红
 void colorGreen();  // 字体变绿
@@ -23,6 +23,7 @@ void colorWhite();  // 字体变白
 
 _COLOR_END  // !namespace color
 
+/*函数定义*/
 // 字体默认颜色
 void color::colorDefault()
 {

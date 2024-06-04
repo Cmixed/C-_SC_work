@@ -18,8 +18,9 @@ static int month = 0;
 static int option = 0;
 static int lastOption = 0;
 
+Sales sales[SALES_NUMBER];
+
 // 外部变量
-extern Sales sales[SALES_NUMBER];   // 来自 FileIO.cpp
 extern const int OPTION_NUMBER;     // 来自 Sales.cpp
 
 // 函数列表
@@ -27,7 +28,7 @@ extern const int OPTION_NUMBER;     // 来自 Sales.cpp
 void lableMenu(bool flagQuit, bool flagEnterNew); // 标题菜单,参数1 0 为退出， 1为正常, 参数2 0 操作界面， 1 选项界面
 void byeMenu();     // 退出菜单
 void waitMenu();    // 等待菜单
-void listMenu();  // 列出所有的操作
+void listMenu();  	// 列出所有的操作
 void clearMenu(bool flagEnterNew);    // 清空菜单
 // 用户输入相关处理函数
 int menuMonth();    // 返回 month
@@ -40,10 +41,10 @@ int optionCase(int option); // 调用相应 option 操作
 int main(int argc, char const *argv[]) 
 {
 
-    initSales(sales);   // 初始化
-    lableMenu(0, 0);      // 初始化菜单栏
+    initSales(sales);		// 初始化
+    lableMenu(0, 0);		// 初始化标题菜单
 
-STARTMONTH:
+STARTMONTH: // 开始读入月份
 
     month = menuMonth();    // 读入月份
 
@@ -61,9 +62,9 @@ STARTMONTH:
 
         lastOption =  optionCase(option);     // 调用相应 option 操作 并 初始化 lastoption
 
-        fileWrite(lastOption, month); // 将刚才的操作存入文件
+        fileWrite(lastOption, month);		  // 将刚才的操作存入文件
 
-        waitMenu();             // 等待
+        waitMenu();             // 等待下一步操作菜单
     
         option = menuOption();  // 更新 option
 
@@ -74,7 +75,7 @@ STARTMONTH:
 
     byeMenu();  // 结束菜单
 
-QUIT:
+QUIT:   // 退出系统
 
     return 0;
 }
@@ -288,12 +289,14 @@ void clearMenu(bool flagEnterNew)
 void waitMenu()
 {
     colorGreen();
-
-    cout << endl << "按回车键以进行下一项操作";
+	
+    cout << endl << "按回车键以进行下一项操作...";
     
-    cin.get(); cin.get();
+    cin.get(); 
+    cin.ignore(1024, '\n');
 
     colorDefault();
+    
 }
 
 // 退出菜单

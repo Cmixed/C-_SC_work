@@ -13,12 +13,13 @@
 #include "Sales.cpp"    // Sales 相关操作
 
 // 全局变量
-Sales sales[SALES_NUMBER];
+const int RECORD_NUMBER = 100;  // 读取记录数的上限
 
 // 函数列表
 int fileRead(Sales sales[], int month); // 文件读入
 int fileWrite(int option, int month);   // 文件写入
 
+// 函数定义
 int fileRead(Sales sales[], int month)
 {
     using namespace std;
@@ -34,7 +35,7 @@ int fileRead(Sales sales[], int month)
     char SalseOrder;
     int temmonth, a, as, b, bs, c, cs, d, ds, e, es;
 
-    for (int i = 0; i < 31; i++)
+    for (int i = 0; i <= RECORD_NUMBER; i++)
     {
         fin >> temmonth >> SalseOrder >> a >> as
             >> b >> bs >> c >> cs >> d >> ds >> e >> es;
@@ -58,7 +59,7 @@ int fileRead(Sales sales[], int month)
         sales[i].sum();
     }
     
-
+ 
 // 测试用，输出每个人的每个销售量
     // for (int i = 0; i < SALES_NUMBER; i++)
     // {
