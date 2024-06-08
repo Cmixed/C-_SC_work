@@ -233,7 +233,7 @@ void lableMenu(bool flagQuit, bool flagEnterNew)
             
             if (option) // 添加操作选项状态
             {
-                // 操作选项状态 option 界面 还是 选项吧执行界面
+                // 操作选项状态 option 界面 还是 选项的执行界面
                 if (!flagEnterNew)
                 {
                     cout << "# 当前操作选项：" << option;
