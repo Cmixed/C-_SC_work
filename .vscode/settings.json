@@ -18,6 +18,7 @@
     "editor.wordWrap": "on",
     "editor.codeLensFontFamily": "Rec Mono Duotone, 霞骛文楷等宽",
     "editor.fontFamily": "Rec Mono Duotone, 霞骛文楷等宽",
-    "files.autoSave": "onWindowChange"
+    "files.autoSave": "onWindowChange",
+    "editor.fontSize": 14
 
 }

@@ -4,6 +4,10 @@
 #ifndef _COLOR_CPP
 #define _COLOR_CPP
 
+#define IM_MIN(A, B)            (((A) < (B)) ? (A) : (B))
+#define IM_MAX(A, B)            (((A) >= (B)) ? (A) : (B))
+#define IM_CLAMP(V, MN, MX)     ((V) < (MN) ? (MN) : (V) > (MX) ? (MX) : (V))
+
 #define _COLOR_BEGIN namespace color {
 #define _COLOR_END }
 
@@ -21,56 +25,60 @@ void colorPurple(); // 字体变紫
 void colorCyan();   // 字体变青
 void colorWhite();  // 字体变白
 
-_COLOR_END  // !namespace color
+
 
 /*函数定义*/
 // 字体默认颜色
-void color::colorDefault()
+void colorDefault()
 {
     std::cout << "\033[0m";
 }
 
 // 字体变红
-void color::colorRed()
+void colorRed()
 {
     std::cout << "\033[31m";
 }
 
 // 字体变绿
-void color::colorGreen()
+void colorGreen()
 {
     std::cout << "\033[32m";
 }
 
 // 字体变黄
-void color::colorYellow()
+void colorYellow()
 {
     std::cout << "\033[33m";
 }
 
 // 字体变蓝
-void color::colorBlue()
+void colorBlue()
 {
     std::cout << "\033[34m";
 }
 
 // 字体变紫
-void color::colorPurple()
+void colorPurple()
 {
     std::cout << "\033[35m";
 } 
 
 // 字体变青
-void color::colorCyan()
+void colorCyan()
 {
     std::cout << "\033[36m";
 }
 
 // 字体变白
-void color::colorWhite()
+void colorWhite()
 {
     std::cout << "\033[37m";
 }
 
+
+// CmxxdZZJ
+
+_COLOR_END  // !namespace color
 
 #endif // !_COLOR_CPP
